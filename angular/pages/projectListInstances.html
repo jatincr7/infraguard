@@ -1,0 +1,131 @@
+<section class="Profilesection" style="padding-top: 90px; padding-left: 10px;padding-right: 20px">
+            <a href='#/administration' ng-click="backKey()"><button type="button" class="btn btn-info btn-sm">&lt;&lt; Back</button></a>
+            <div class="companyDetailsBg addCompanyDetail" style='width: 100%;'>
+				
+				<div ng-if="instanceData.length == 0">
+					
+					<div class="profileHead" style="margin-left: 200px;width:60%;margin-top: 40px" ng-if="instanceData.length == 0">There are no Project Instance data available.</div>
+					
+					<div style="float:left;margin-top:15px;margin-left:1%;"><a ng-click="syncInstanceData(regionArray)"><button type="button" class="btn btn-info btn-sm btnpadding">Sync Instances</button></a></div>
+					
+				</div>
+                
+                <div ng-if="instanceData.length > 0">
+                <div style="margin-bottom:15px;margin-top:-5px;">
+                    <div class="profileHead left" style="float: left;width:60%;">Project Instance data of {{instanceData[0].customer_name}}
+                        <!--<a href="#/listInstances"><button style="margin-left:35%;" type="button" class="btn btn-lg btn-primary btn-sm">Instance List</button></a>
+                        <a href="#/projectInstances"><button type="button" style="color:yellow;" class="btn btn-lg btn-primary btn-sm">Project View</button></a>
+                        <!--<a ng-click="syncInstanceData()" style="float: right"><button type="button" class="btn btn-primary btn-sm">Sync Instances</button></a>-->
+                    </div>
+                    <div class="form-group" style="width:25%;float:right;margin-right: 15px">
+                            <div class="input-group">
+                              <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                              <input type="text" class="form-control ng-valid ng-dirty ng-valid-parse ng-touched" placeholder="Search for server name" ng-model="query">
+                            </div>      
+                    </div>
+                </div>
+                <div class='clearfix'></div>
+                <div>
+                   <div style="float:left;margin-top:20px;cursor: pointer;;font-weight: bold;height:34px;"><a ng-click="assignMultiProjects()" style='color:#17a0a2'>Assign Projects</a></div>
+                   <div style="float:left;margin-top:15px;margin-left:1%;"><a ng-click="syncInstanceData(regionArray)"><button type="button" class="btn btn-info btn-sm btnpadding">Sync Instances</button></a></div>
+                   <select class="form-control input-sm" ng-model="instanceState" style="width: 17%;float: left;margin-top: 15px;margin-left:1%;" ng-change="changeState(instanceState)">
+                       <option value=''>All Instances</option> 
+                       <option value='running' selected="selected">Running Instances</option>
+                       <option value='stopped'>Stopped Instances</option>
+                       <option value='hybrid'>Hybrid Instances</option>
+                      </select>
+                   <!-- <a href="javascript:void(0)" ng-click='checkInstancesStatus(instanceData[0].customerIAMId)'><img class='refresh_whole' src="images/refresh_icon.png" style="width: 20px;margin-top: 25px;margin-left: 15px;"></a>-->
+                   <div class="pagination" ng-if='instanceData.length>50' style="margin-right: 15px">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}"><a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a></li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}"><a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a></li>
+                            <li ng-class="{disabled: noNext()}"><a href="javascript:void(0)" ng-click="selectNext()">Next</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <table class="table" style="width:100%;margin-top: 25px;">
+                    <tr>
+                          <th></th>
+                          <th>S.no</th>
+                          <th>
+                            <a ng-click="sortType = 'serverName'; sortReverse = !sortReverse">
+                              Server Name
+                              <span ng-show="sortType == 'serverName' && !sortReverse" class="fa fa-caret-down"></span>
+                              <span ng-show="sortType == 'serverName' && sortReverse" class="fa fa-caret-up ng-hide"></span>
+                            </a>
+                           </th>
+                           <th><a ng-click="sortType = 'instanceId'; sortReverse = !sortReverse">
+                               Instance Id
+                              <span ng-show="sortType == 'instanceId' && !sortReverse" class="fa fa-caret-down"></span>
+                              <span ng-show="sortType == 'instanceId' && sortReverse" class="fa fa-caret-up ng-hide"></span>
+                            </a></th>
+                           
+                          <th>
+                            <a ng-click="sortType = 'region'; sortReverse = !sortReverse">
+                              Region
+                              <span ng-show="sortType == 'region' && !sortReverse" class="fa fa-caret-down"></span>
+                              <span ng-show="sortType == 'region' && sortReverse" class="fa fa-caret-up ng-hide"></span>
+                            </a>
+                           </th>
+                           <th>
+                            <a ng-click="sortType = 'companyName'; sortReverse = !sortReverse">
+                              Company
+                              <span ng-show="sortType == 'companyName' && !sortReverse" class="fa fa-caret-down"></span>
+                              <span ng-show="sortType == 'companyName' && sortReverse" class="fa fa-caret-up ng-hide"></span>
+                            </a>
+                           </th>
+                          <th>
+                            <a ng-click="sortType = 'projectName'; sortReverse = !sortReverse">
+                              Project
+                              <span ng-show="sortType == 'projectName' && !sortReverse" class="fa fa-caret-down"></span>
+                              <span ng-show="sortType == 'projectName' && sortReverse" class="fa fa-caret-up ng-hide"></span>
+                            </a>
+                           </th>
+                          <th><a ng-click="sortType = 'instanceState'; sortReverse = !sortReverse">
+                              State
+                              <span ng-show="sortType == 'instanceState' && !sortReverse" class="fa fa-caret-down"></span>
+                              <span ng-show="sortType == 'instanceState' && sortReverse" class="fa fa-caret-up ng-hide"></span>
+                            </a></th>
+                           <th><a ng-click="sortType = 'status'; sortReverse = !sortReverse">
+                              SSM Status
+                              <span ng-show="sortType == 'status' && !sortReverse" class="fa fa-caret-down"></span>
+                              <span ng-show="sortType == 'status' && sortReverse" class="fa fa-caret-up ng-hide"></span>
+                            </a>
+                           </th>
+                          <th>Assign Project</th>
+                    </tr>
+                  <tr ng-repeat="row in (instanceData | filter:search | filter: instanceState | orderBy:sortType:sortReverse).slice(begin, end)">
+                        <td><input type="checkbox" class="collectServerIds" value="{{row.id}}" ng-click="collectServerIds(row.id)"/></td>
+                        <td>#{{numPerPage *(currentPage-1)+$index+1}}</td> 
+                        <td ng-if="row.status=='Alive' || row.status=='Online'"><img src="images/green-circle.png"/>&nbsp;&nbsp;&nbsp;<a ng-click="showInstanceDetails(row.raw_data,row.serverName)" style="cursor:pointer;">{{row.serverName}}</a></td>
+                        <td ng-if="row.status=='Stop' || row.status=='ConnectionLost' || row.status=='Inactive' || row.status=='Error'"><img width="15px"  src="images/grey_circle.png"/>&nbsp;&nbsp;&nbsp;<a ng-click="showInstanceDetails(row.raw_data,row.serverName)" style="cursor:pointer;">{{row.serverName}}</a></td>
+                        <td ng-if="row.status==null">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a ng-click="showInstanceDetails(row.raw_data,row.serverName)" style="cursor:pointer;">{{row.serverName}}</a></td>
+                        <td><a ng-click="instanceStatusDetails(row.instance_raw_data,row.serverName,row.status)">{{row.instanceId}}</a></td>
+                        <td>{{row.region}}</td>
+                        <td>{{row.companyName}} </td>
+                        <td>{{row.projectName}} </td>
+                        <td>{{row.instanceState}}</td>
+                        
+                        <td style="text-align:center;" ng-if="row.status=='Alive' || row.status=='Online'"><a href="javascript:void(0)" ng-click='checkSSMAgentStatus(row.id,row.serverIP,row.customerIAMId)' title="{{row.status}}">{{row.status}}&nbsp;&nbsp;<img class="checkSSMStatus_{{row.id}}" src="images/refresh_icon.png" style="width: 20px;"></a></td>
+                        <td style="text-align:center;" ng-if="(row.status=='Stop' || row.status=='ConnectionLost' || row.status=='Inactive' || row.status=='Error') && (row.instance_raw_data==null || row.instance_raw_data=='undefined')" ><a href="javascript:void(0)" ng-click='checkSSMAgentStatus(row.id,row.serverIP,row.customerIAMId)' title="Not in Managed Instances">{{row.status}}&nbsp;&nbsp;<img class="checkSSMStatus_{{row.id}}" src="images/refresh_icon.png" style="width: 20px;"></a></td>
+                        <td style="text-align:center;" ng-if="(row.status=='Stop' || row.status=='ConnectionLost' || row.status=='Inactive' || row.status=='Error') && (row.instance_raw_data!=null && row.instance_raw_data !='undefined')" ><a href="javascript:void(0)" ng-click='checkSSMAgentStatus(row.id,row.serverIP,row.customerIAMId)' title="{{row.instance_raw_data}}">{{row.status}}&nbsp;&nbsp;<img class="checkSSMStatus_{{row.id}}" src="images/refresh_icon.png" style="width: 20px;"></a></td>
+                        <td style="text-align:center;" ng-if="row.status==null" ><a href="javascript:void(0)" ng-click='checkSSMAgentStatus(row.id,row.serverIP,row.customerIAMId)'>{{row.status}}&nbsp;&nbsp;<img class="checkSSMStatus_{{row.id}}" src="images/refresh_icon.png" style="width: 20px;"></a></td>
+                        <td><a ng-click="assignProject(row.id)" ng-if="row.project_id==undefined"><button type="button" class="btn btn-info btn-sm">Assign Project</button></a><a ng-click="changeProject(row.id,row.project_id,row.company_id)" ng-if="row.project_id !=undefined"><button type="button" class="btn btn-info btn-sm">Change Project</button></a></td>
+                  </tr>
+              </table>
+                <div class="pagination" ng-if='instanceData.length>50' style="margin-right: 15px">
+                    <ul>
+                        <li ng-class="{disabled: noPrevious()}"><a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a></li>
+                        <li ng-repeat="page in pages" ng-class="{active: isActive(page)}"><a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a></li>
+                        <li ng-class="{disabled: noNext()}"><a href="javascript:void(0)" ng-click="selectNext()">Next</a></li>
+                    </ul>
+                </div>
+                </div>
+            </div>
+</section>
+<div ng-controller="searchServerController"></div>
+<style>
+    table tr td{text-align: left;}table tr th{text-align: left;font-weight: bold;}
+    .btn-xs,.btn-sm,.btn-xs:hover,btn-sm:hover{background-color: #17a0a2;border-color: #17a0a2;}
+    .btnpadding {padding-top: 5px;padding-bottom: 5px;margin-right: 5px;}
+</style>

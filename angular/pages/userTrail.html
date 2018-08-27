@@ -1,0 +1,49 @@
+<section class="Profilesection" style="padding-top: 100px; padding-left: 20px;padding-right: 20px">
+            <div class="companyDetailsBg addCompanyDetail">
+                <h4 ng-if="userTrail[0].uname" style=" margin-bottom: 15px;font-size: 25px">InfraTrail of {{userTrail[0].uname}}</h4>
+                <div>
+                  <div style="text-align: center;margin-top: 30px;font-size: 25px;" ng-if="userTrail==''">No User trail is available.</div>
+                           <table ng-if="userTrail.length >0" class="table">
+                               <thead>
+                                   <tr>
+                                        <th class="col-xs-1">S.no</th>
+                                        <th class="col-xs-2">Script Name</th>
+                                        <th class="col-xs-2">Server Name</th>
+                                        <th class="col-xs-3">Run by</th>
+                                        <th class="col-xs-2">Run time</th>
+                                        <th class="col-xs-2">&nbsp;&nbsp;</th>
+                                    </tr>
+                               </thead>
+                               <tbody>
+                                  <tr ng-repeat="row in userTrail">
+                                    <td class="col-xs-1">#{{$index + 1}}</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='0'">Run Command</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-1'">Kill Process</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-2'">Memory Echo1</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-3'">Memory Echo2</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-4'">Memory Echo3</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-10'">LockDown Server</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-9'">unLock Server</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-8'">Add Server User</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-7'">Delete Server User</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-6'">Server Rotate Key</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-5'">Get Access Key</td>
+                                    <td class="col-xs-2" ng-if="row.script_id=='-11'">Top Processes</td>
+                                    <td class="col-xs-2" ng-if="row.script_id!='0' && row.script_id!='-1' && row.script_id!='-2' && row.script_id!='-3'&& row.script_id!='-4' && row.script_id!='-10' && row.script_id!='-9' && row.script_id!='-8' && row.script_id!='-7' && row.script_id!='-6' && row.script_id!='-5' && row.script_id!='-11'">{{row.script_name}}</td>
+                                    <td class="col-xs-2">{{ row.serverName }}</td>
+                                    <td class="col-xs-3">{{ row.email }}</td>
+                                    <td class="col-xs-2">{{row.script_run_time |date:'yyyy-MM-dd hh:mm'}}</td>
+                                    <td class="col-xs-2">
+                                        <a ng-if="row.script_id!='0' && row.script_id!='-1' && row.script_id!='-2' && row.script_id!='-3' && row.script_id!='-4' && row.script_id!='-10' && row.script_id!='-9' && row.script_id!='-8' && row.script_id!='-7' && row.script_id!='-6' && row.script_id!='-5' && row.script_id!='-11'" ng-click="showTrailOutputModel(row.script,row.command_output)"><button type="button" class="btn btn-info btn-sm">Command & Output</button></a>
+                                        <a ng-if="row.script_id=='0' || row.script_id=='-1' || row.script_id=='-2' || row.script_id=='-3' || row.script_id=='-4' || row.script_id=='-10' || row.script_id=='-9' || row.script_id=='-8' || row.script_id=='-7' || row.script_id=='-6' || row.script_id=='-5' || row.script_id=='-11'" ng-click="showTrailOutputModel(row.command,row.command_output)"><button type="button" class="btn btn-info btn-sm">Command & Output</button></a>
+                                    </td>
+                                  </tr> 
+                               </tbody>
+                            </table>
+                </div>
+            </div> 
+</section>
+<style>
+    table tr td{text-align: left;}table tr th{text-align: left;font-weight: bold;}
+    .btn-xs,.btn-xs:hover{background-color: #17a0a2;border-color: #17a0a2;}
+</style>

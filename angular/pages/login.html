@@ -1,0 +1,116 @@
+    <div class="logoHeader">
+    <div class="logodiv">
+        <a href="#/">
+                    <img alt="" src="images/logo.png" />
+                    </a>
+    </div>
+    </div>
+
+        <!-- Login Section -->
+        <section class="loginsection">
+            <div class="content-wrapper">
+                <div class="loginBox">
+
+                <h1>Log In</h1>
+                <div class="clear">&nbsp;</div>
+
+                 <form name="loginForm" novalidate>
+
+                    <div class="d-flex flex-column my-flex-container-column">
+                        <div class="p-2 my-flex-item">
+
+                            <div class="input-group" style="width: 100%">
+                              <div class="input-group input-group-seamless" style="width: 100%">
+                                <span class="input-group-prepend">
+                                  <span class="input-group-text">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                  </span>
+                                </span>
+                                <input id="Text1" type="text" class="form-control" ng-blur="uname_blur()" placeholder="Email Id" name="txtEmail" ng-model="txtEmail" required />
+                               </div>
+                            </div>
+                        </div>
+
+                        <div class="p-2 my-flex-item">
+                            <div class="input-group mb-3" style="width: 100%">
+                              <div class="input-group input-group-seamless" style="width: 100%">
+                                <span class="input-group-prepend">
+                                  <span class="input-group-text">
+                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                  </span>
+                                </span>
+                                <input id="Text2" type="password" class="form-control" ng-blur="passw_blur()" placeholder="Password" name="txtPassw" ng-model="txtPassw" required />
+                               </div>
+                            </div>
+                        </div>
+
+                        <div class="p-2 my-flex-item">
+                            <input id="Password1" type="submit" class="btn btn-info" data-toggle="{{visible_mfa ? 'modal' : ''}}" data-target="{{visible_mfa ? '#mfa_authentication' : ''}}" value="Log In" name="btnSubmit" ng-click='login()' style="width: 100%;font-weight: 600;" />
+                        </div>
+                    </div>
+
+                 </form>
+
+
+                    <div class="d-flex flex-column my-flex-container-column">
+                        <div class="p-2 my-flex-item">
+                            <div class="forgotText" ng-click="showResetPopup('pwd')"><a data-toggle="modal" data-target="#recoverPassModal" href="javascript:void(0)">Forgot Password</a></div>
+                        </div>
+                        <div class="p-2 my-flex-item">
+                            &nbsp;
+                        </div>
+                        <div class="p-2 my-flex-item">
+                            <div class="copyrightText" style="text-align: center;line-height: 1.5;">Not a customer yet? Email us at <a href="mailto:contact@infraguard.io">contact@infraguard.io</a> for a free demo.</div>
+                        </div>
+                    </div>
+
+
+                    
+                    <!--<div class="signUpText"><a href="#signup">Sign Up</a></div>-->
+                    
+
+                    <div>
+                        <p class="colorRed" ng-show="loginFailed">{{ loginMsg }}</p>
+                    </div>
+
+                    <div>
+                        <p class="colorRed" ng-show="!loginFailed && !loginForm.txtEmail.$valid && (loginForm.txtEmail.$dirty || loginForm.txtEmail.$touched)">Email Id is required.</p>
+                    </div>
+                    
+                    <div>
+                    <p class="colorRed" ng-show="!loginFailed && !loginForm.txtPassw.$valid && (loginForm.txtPassw.$dirty || loginForm.txtPassw.$touched)">Password is required.</p>
+                    </div>
+                   
+                    <div class="clear"></div>
+                </div>
+                
+            </div>
+            
+
+        </section>
+
+<style type="text/css">
+    h1, .h1 {
+        text-align: center;
+        font-size: 30px;
+        line-height: 1.6em;
+        margin-bottom: .2em;
+        letter-spacing: -0.029em;
+        text-transform: capitalize;
+        font-weight: bolder;
+        color: #535461;
+        font-family: "Open Sans","Helvetica Neue",Arial,Helvetica,Verdana,sans-serif;
+    }
+    a{
+        text-decoration: underline;
+    }
+    a:hover {
+        color: #237a91;
+        text-decoration: underline;
+    }
+    ::selection {
+        background-color: #39889c;
+        color: white;
+    }
+</style>
+<!-- Login Section End -->

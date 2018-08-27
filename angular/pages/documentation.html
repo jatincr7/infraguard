@@ -1,0 +1,965 @@
+<section style="padding-top: 100px; padding-left: 20px;padding-right: 20px;font-family:sans-serif;font-size: 1.5em;">
+    <div>
+        <div class="profileHead" style="color: #004085">InfraGuard Guide</div>
+        <div class="clearfix">&nbsp;</div>
+        <a id="start"></a>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 table-of-contents">
+                <h2>Table of Contents</h2>
+                <br/>
+                <ol style="margin-left: 20px;">
+                    <li>
+                        <a class="anchorTextOnHover" href="#/documentation/#aws-onboarding">
+                          Onboard your AWS Servers
+                        </a>
+                    </li>
+                    <li>
+                        <a class="anchorTextOnHover" href="#/documentation/#on-premise-onboarding">
+                            Onboard your On-Premise Servers
+                        </a>
+                    </li>
+                    <li>
+                        <a class="anchorTextOnHover" href="#/documentation/#role-on-main-instance">
+                             Creating an IAM Role on the InfraGuard Main Instance
+                        </a>
+                    </li>
+                    <li>
+                        <a class="anchorTextOnHover" href="#/documentation#create-activation">
+                            How to create an Activation?
+                        </a>
+                    </li>
+                    
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+
+        <a id="aws-onboarding"></a>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <section>
+            <div class="deactivate"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                        <h2 class="section-title">Onboard your AWS Servers</h2>
+                        <hr/>
+
+                        <h3 class="section-title">Installation of SSM Agent - Linux Server</h3>
+                            <hr>
+                                <ul>
+                                    <li>
+                                        <p>
+                                    Check InfraGuard (IG )to see whether SSM is installed and running . If SSM is installed and running , IG Admin console will show green light against the server.
+                                </p>
+                                        <ul>
+                                            <li>Login to the server via SSH</li>
+                                            <li>Run command to check if it is running: 
+                                                <p>
+                                                    <code style="font-size: 0.8em;">sudo status amazon-ssm-agent</code>
+                                                </p>
+                                            </li>
+                                            <li>If the agent is running and still it is still not active then use the restart of ssm command: 
+                                                <p>
+                                                    <code style="font-size: 0.8em;">sudo restart amazon-ssm-agent</code>
+                                                </p>
+                                            </li>
+                                            <li>If the agent is not running then agent is not installed . Go to step 5. For installing SSM agent</li>
+                                            <li>Steps to Install SSM on Ubuntu Server 14 - 64 Bit. More details in the link below: 
+                                        
+                                                <p>
+                                                    <a class="anchorTextOnHover" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-manual-agent-install.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-manual-agent-install.html</a>
+                                                </p>
+                                                <pre><code style="font-size: 0.8em;" class="lang-json">mkdir /tmp/ssm
+wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+sudo dpkg -i amazon-ssm-agent.deb
+sudo status amazon-ssm-agent
+</code></pre>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <br/>
+                                <h3 class="section-title">Installation of SSM Agent - Windows Server</h3>
+                                <hr>
+                                    <ul>
+                                        <li>
+                                            <p>
+                                    Check InfraGuard (IG )to see whether SSM is installed and running . If SSM is installed and running , IG Admin console will show green light against the server. Details:
+                                    
+                                                <p>
+                                                    <a class="anchorTextOnHover" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-install-win.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-install-win.html</a>
+                                                </p>
+                                            </p>
+                                            <ul>
+                                                <li>Log in to your instance by using, for example, Remote Desktop or Windows PowerShell.</li>
+                                                <li>Download the latest version of SSM Agent to your instance: 
+                                        
+                                                    <p>
+                                                        <a class="anchorTextOnHover" href="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/windows_amd64/AmazonSSMAgentSetup.exe">https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/windows_amd64/AmazonSSMAgentSetup.exe</a>
+                                                    </p>
+                                                    <li>Start or restart SSM Agent (AmazonSSMAgent.exe) using the Windows Services Control Panel or by sending the following command in PowerShell: 
+                                                        <p>
+                                                            <code style="font-size: 0.8em;">Restart-Service AmazonSSMAgent</code>
+                                                        </p>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                        <h3 class="section-title">Creating a Role for communicating via SSM with InfraGuard</h3>
+                            <ul>
+                                <li>
+                                    <p>
+                                    Create a Role 
+                                        <b>InfraGuard</b> (Role Name) in IAM → Roles
+                                
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                    Attach Policy 
+                                        <b>AmazonSSMFullAccess</b> to the InfraGuard Role [as in the screenshot below]
+                                
+                                    </p>
+                                    <div class="zoom" onclick="window.open('images/amazonSSMFullAccess.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/amazonSSMFullAccess.jpg" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>
+                                    Add Inline Policy  with name 
+                                        <b>InfraGuardRole</b> with the JSON below : (as in the screenshot above) (Copy and Paste the JSON Below)
+                                
+                                    </p>
+                                    <pre><code style="font-size: 0.8em;" class="lang-json">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "ec2:DescribeVpcs",
+                "ec2:DescribeInstances",
+                "ec2:DescribeInstanceAttribute",
+                "ec2:DescribeTags",
+                "ec2:ModifyInstanceAttribute",
+                "ec2:DescribeSecurityGroups",
+                "ec2:RevokeSecurityGroupIngress",
+                "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:RevokeSecurityGroupEgress",
+                "ec2:DeleteSecurityGroup",
+                "ec2:CreateSecurityGroup",
+                "ec2:StartInstances",
+                "ec2:StopInstances",
+                "cloudtrail:LookupEvents"
+            ],
+            "Resource": "*",
+            "Effect": "Allow",
+            "Sid": "Stmt1434989080227"
+        }
+    ]
+}
+</code></pre>
+                                    <div class="zoom" onclick="window.open('images/InfraGuardRole.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/InfraGuardRole.jpg" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>
+                                    Edit 
+                                        <b>Trust Relationship</b> JSON (as in the Screenshot below )
+                                
+                                    </p>
+                                    <div class="zoom" onclick="window.open('images/edit-trust-relationship.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/edit-trust-relationship.jpg" />
+                                    </div>
+                                    <p>(Copy and Paste the JSON Below) [Please NOTE 622170306617 (as below) is the Account ID of the AWS Account where the Main InfraGuard EC2 Instance runs]</p>
+                                    <p>Kindly ask your InfraGuard Administrator for the 
+                                        <b>infraguard-switchrole</b> ARN and replace 
+                                        <br/>
+                                        <code style="font-size: 0.8em;">"AWS": "arn:aws:iam::622170306617:role/infraguard-switchrole"</code> with the obtained ARN.
+                                    </p>
+                                    <pre>
+                                        <code style="font-size: 0.8em;" class="lang-json">
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "foriamuser",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<b>622170306617</b>:role/infraguard-switchrole"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "InfraGuard2017"
+        }
+      }
+    },
+    {
+      "Sid": "forssmec2",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+</code>
+                                    </pre>
+                                </li>
+                                <li>
+                                    <p>
+                                    Update Trust Policy (as in the screenshot below)
+                                </p>
+                                    <div class="zoom" onclick="window.open('images/edit-trust-relationship.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/edit-trust-relationship.jpg" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>
+                                    Make sure whatever Role is attached to the EC2 instances in the AWS account should have Policy 
+                                        <b>AmazonSSMFullAccess</b> attached to it . And also make sure that Managed Instances in the AWS EC2 console should have green light (ie Ping Status is online) [as in the screenshot below] once they are online , they should show up as Green Light on the InfraGuard console.
+                                
+                                    </p>
+                                    <div class="zoom" onclick="window.open('images/managed-instances.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/managed-instances.jpg" />
+                                    </div>
+                                </li>
+                            </ul>
+                            <br/>
+
+                            <p style="font-size: 16px;">Now, <i><a class="anchorTextOnHover" href="#/documentation/#onboard-to-infraguard">click here</a></i> for steps to onboard the servers to Infraguard.</p>
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+                        <a id="on-premise-onboarding"></a>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <section>
+                            <div class="deactivate"></div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                                        <h2 class="section-title">Onboard your On-Premise Servers</h2>
+                                        <hr/>
+
+                                        
+                                        <br/>
+                                        <h3 class="section-title">Installation of SSM Agent in Hybrid Environment and Onboarding</h3>
+                                        <hr>
+                                            <p>
+                                                <b>Pre-requisite :</b>
+                                                <p>
+                                Once you are ready to onboard Servers to Infraguard from Hybrid Environment, RightCloud will create an Activation, which will include the following three components:
+                            </p>
+                                                <ul style="margin-left: 40px;">
+                                                    <li>activation-code</li>
+                                                    <li>activation-id</li>
+                                                    <li>region</li>
+                                                </ul>
+                                                <p>
+                                Subsequently you have to install SSM agent in your Hybrid Environment VMs, by following the steps below:
+                            </p>
+                                                <ul>
+                                                    <li>
+                                                        <p>
+                                        To install the SSM Agent on servers and VMs in Windows hybrid environment
+                                    </p>
+                                                        <ul style="margin-left: 30px;">
+                                                            <li>Log on to a server or VM in your hybrid environment.</li>
+                                                            <li>Open Windows PowerShell.</li>
+                                                            <li>Copy and paste the following command block (in 4. below) into AWS Tools for Windows PowerShell. Replace the placeholder values with the Activation Code and Activation ID and AWS Region given by RightCloud above.
+                                            
+                                                                <pre><code style="font-size: 0.8em;" class="lang-json">$code = <b>"activation-code"</b>
+$id = <b>"activation-id"</b>
+$region = <b>"region"</b>
+$dir = $env:TEMP + "\ssm"
+New-Item -ItemType directory -Path $dir -Force
+cd $dir
+(New-Object System.Net.WebClient).DownloadFile("https://amazon-ssm-$region.s3.amazonaws.com/latest/windows_amd64/AmazonSSMAgentSetup.exe", $dir + "\AmazonSSMAgentSetup.exe")
+Start-Process .\AmazonSSMAgentSetup.exe -ArgumentList @("/q", "/log", "install.log", "CODE=$code", "ID=$id", "REGION=$region") -Wait
+Get-Content ($env:ProgramData + "\Amazon\SSM\InstanceData\registration")
+Get-Service -Name "AmazonSSMAgent"
+</code></pre>
+                                                                <p>Choose the region name accordingly from the following list:</p>
+                                                                <br/>
+                                                                <div class="zoom" onclick="window.open('images/region-names.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                                    <img src="images/region-names.jpg" />
+                                                                </div>
+                                                                <br/>
+                                                            </li>
+                                                            <li>
+                                            Press Enter.
+                                        </li>
+                                                            <li>
+                                                                <p>The command does the following:</p>
+                                                                <ul style="margin-left: 30px;">
+                                                                    <li>
+                                                    Downloads and installs SSM Agent onto the server or VM.
+                                                </li>
+                                                                    <li>
+                                                    Registers the server or VM with the SSM service.
+                                                </li>
+                                                                    <li>
+                                                    Returns a response to the request similar to the following:
+                                                    
+                                                                        <div class="zoom" onclick="window.open('images/powershell-output.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                                            <img src="images/powershell-output.jpg" />
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                To install the SSM Agent on servers and VMs in your hybrid environment
+                                
+                                                            <ul>
+                                                                <li>
+                                        Log on to a server or VM in your hybrid environment.
+                                    </li>
+                                                                <li>
+                                        Copy and paste one of the following command blocks into SSH. Replace the placeholder values with the Activation Code and Activation ID and AWS Region given by RightCloud above. 
+                                    </li>
+                                                                <li>
+                                        Note that sudo is not necessary if you are a root user.
+                                    </li>
+                                                                <ol style="margin-left: 30px;">
+                                                                    <li>On Amazon Linux, RHEL 6.x, and CentOS 6.x (use the code below)
+                                            
+                                                                        <pre><code style="font-size: 0.8em;" class="lang-json">mkdir /tmp/ssm
+curl https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm -o /tmp/ssm/amazon-ssm-agent.rpm
+sudo yum install -y /tmp/ssm/amazon-ssm-agent.rpm
+sudo stop amazon-ssm-agent
+sudo amazon-ssm-agent -register -code <b>"activation-code"</b> -id <b>"activation-id"</b> -region <b>"region"</b>
+sudo start amazon-ssm-agent
+</code></pre>
+                                                                        <p>Press 
+                                                                            <b>Enter</b>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>On RHEL 7.x and CentOS 7.x (use the code below)
+
+                                                                        <pre><code style="font-size: 0.8em;" class="lang-json">mkdir /tmp/ssm
+curl https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm -o /tmp/ssm/amazon-ssm-agent.rpm
+sudo yum install -y /tmp/ssm/amazon-ssm-agent.rpm
+sudo systemctl stop amazon-ssm-agent
+sudo amazon-ssm-agent -register -code <b>"activation-code"</b> -id <b>"activation-id"</b> -region <b>"region"</b>
+sudo systemctl start amazon-ssm-agent
+</code></pre>
+                                                                        <p>Press 
+                                                                            <b>Enter</b>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>On SLES [SUSE Linux Enterprise Server] (use the code below)
+                                            
+                                                                        <pre><code style="font-size: 0.8em;" class="lang-json">mkdir /tmp/ssm
+sudo wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+sudo rpm --install amazon-ssm-agent.rpm
+sudo systemctl stop amazon-ssm-agent
+sudo amazon-ssm-agent -register -code <b>"activation-code"</b> -id <b>"activation-id"</b> -region <b>"region"</b>
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
+</code></pre>
+                                                                        <p>Press 
+                                                                            <b>Enter</b>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>On Ubuntu (use the code below)
+                                            
+                                                                        <pre><code style="font-size: 0.8em;" class="lang-json">mkdir /tmp/ssm
+
+curl https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb -o /tmp/ssm/amazon-ssm-agent.deb
+
+sudo dpkg -i /tmp/ssm/amazon-ssm-agent.deb
+sudo service amazon-ssm-agent stop
+sudo amazon-ssm-agent -register -code "activation-code" -id "activation-id" -region "region" 
+sudo service amazon-ssm-agent start
+</code></pre>
+                                                                        <p>Press 
+                                                                            <b>Enter</b>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                            On Raspbian (use the code below)
+                                            
+                                                                        <pre><code style="font-size: 0.8em;" class="lang-json">mkdir /tmp/ssm
+sudo curl https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_arm/amazon-ssm-agent.deb -o /tmp/ssm/amazon-ssm-agent.deb
+sudo dpkg -i /tmp/ssm/amazon-ssm-agent.deb
+sudo service amazon-ssm-agent stop
+sudo amazon-ssm-agent -register -code <b>"activation-code"</b> -id <b>"activation-id"</b> -region <b>"region"</b> 
+sudo service amazon-ssm-agent start
+</code></pre>
+                                                                        <p>Press 
+                                                                            <b>Enter</b>
+                                                                        </p>
+                                                                    </li>
+                                                                </ol>
+                                                                <p>
+                                                                    <b>Note:</b> If you see the following error in the SSM Agent error logs, then the machine ID did not persist after a reboot: 
+                                        
+                                                                    <p>
+                                                                        <i>
+                                            Unable to load instance associations, unable to retrieve associations unable to retrieve associations error occurred in RequestManagedInstanceRoleToken: MachineFingerprintDoesNotMatch: Fingerprint does not match
+                                        </i>
+                                                                    </p>
+                                                                </p>
+                                                                <p>Execute the following command to make the machine ID persist after a reboot.
+
+                                                                    <pre><code style="font-size: 0.8em;" class="lang-json">umount /etc/machine-id
+systemd-machine-id-setup
+</code></pre>
+                                                                </p>
+                                                            </ul>
+                                                        </p>
+                                                    </li>
+                                                </ul>
+                                            </p>
+
+                                            <h3 class="section-title">Creating a Role for communicating via SSM with InfraGuard</h3>
+                            <ul>
+                                <li>
+                                    <p>
+                                    Create a Role 
+                                        <b>InfraGuard</b> (Role Name) in IAM → Roles
+                                
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                    Attach Policy 
+                                        <b>AmazonSSMFullAccess</b> to the InfraGuard Role [as in the screenshot below]
+                                
+                                    </p>
+                                    <div class="zoom" onclick="window.open('images/amazonSSMFullAccess.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/amazonSSMFullAccess.jpg" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>
+                                    Add Inline Policy  with name 
+                                        <b>InfraGuardRole</b> with the JSON below : (as in the screenshot above) (Copy and Paste the JSON Below)
+                                
+                                    </p>
+                                    <pre><code style="font-size: 0.8em;" class="lang-json">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "ec2:DescribeVpcs",
+                "ec2:DescribeInstances",
+                "ec2:DescribeInstanceAttribute",
+                "ec2:DescribeTags",
+                "ec2:ModifyInstanceAttribute",
+                "ec2:DescribeSecurityGroups",
+                "ec2:RevokeSecurityGroupIngress",
+                "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:RevokeSecurityGroupEgress",
+                "ec2:DeleteSecurityGroup",
+                "ec2:CreateSecurityGroup",
+                "ec2:StartInstances",
+                "ec2:StopInstances",
+                "cloudtrail:LookupEvents"
+            ],
+            "Resource": "*",
+            "Effect": "Allow",
+            "Sid": "Stmt1434989080227"
+        }
+    ]
+}
+</code></pre>
+                                    <div class="zoom" onclick="window.open('images/InfraGuardRole.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/InfraGuardRole.jpg" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>
+                                    Edit 
+                                        <b>Trust Relationship</b> JSON (as in the Screenshot below )
+                                
+                                    </p>
+                                    <div class="zoom" onclick="window.open('images/edit-trust-relationship.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/edit-trust-relationship.jpg" />
+                                    </div>
+                                    <p>(Copy and Paste the JSON Below) [Please NOTE 622170306617 (as below) is the Account ID of the AWS Account where the Main InfraGuard EC2 Instance runs]</p>
+                                    <p>Kindly ask your InfraGuard Administrator for the 
+                                        <b>infraguard-switchrole</b> ARN and replace 
+                                        <br/>
+                                        <code style="font-size: 0.8em;">"AWS": "arn:aws:iam::622170306617:role/infraguard-switchrole"</code> with the obtained ARN.
+                                    </p>
+                                    <pre>
+                                        <code style="font-size: 0.8em;" class="lang-json">
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "foriamuser",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<b>622170306617</b>:role/infraguard-switchrole"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "InfraGuard2017"
+        }
+      }
+    },
+    {
+      "Sid": "forssmec2",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+</code>
+                                    </pre>
+                                </li>
+                                <li>
+                                    <p>
+                                    Update Trust Policy (as in the screenshot below)
+                                </p>
+                                    <div class="zoom" onclick="window.open('images/edit-trust-relationship.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/edit-trust-relationship.jpg" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>
+                                    Make sure whatever Role is attached to the EC2 instances in the AWS account should have Policy 
+                                        <b>AmazonSSMFullAccess</b> attached to it . And also make sure that Managed Instances in the AWS EC2 console should have green light (ie Ping Status is online) [as in the screenshot below] once they are online , they should show up as Green Light on the InfraGuard console.
+                                
+                                    </p>
+                                    <div class="zoom" onclick="window.open('images/managed-instances.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                        <img src="images/managed-instances.jpg" />
+                                    </div>
+                                </li>
+                            </ul>
+
+
+                            <p style="font-size: 16px;">Now, <i><a class="anchorTextOnHover" href="#/documentation/#onboard-to-infraguard">click here</a></i> for steps to onboard the servers to Infraguard.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+
+                            
+                                <a id="onboard-to-infraguard"></a>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <section>
+                                    <div class="deactivate"></div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                                                <h2 class="section-title">Onboard your servers to InfraGuard</h2>
+                                                <hr>
+                                                   
+                                                    <ul>
+                                                        <li>
+                                                            <p>
+                                                            Make sure the servers you want to Onboard have the role Infraguard attached to through the AWS Console. 
+                                                            </p>
+                                                        </li>
+                                                        <li>
+                                                            <p>
+                                                                For AWS servers, select <b>Instances</b> tab in the EC2 Dashboard, select the instance and goto <br/>Actions → Instance Settings → Attach/Replace IAM Role 
+                                                                <br/>
+                                                                Assign the role InfraGuard created in the earlier step.
+                                                            </p>
+                                                        </li>
+                                                        <li>
+                                                            <p>
+                                                                For On-Premise servers, select <b>Managed Instances</b> tab in the EC2 Dashboard, select the instance and goto <br/>Actions → Instance Settings → Attach/Replace IAM Role
+                                                                <br/>
+                                                                Assign the role InfraGuard created in the earlier step.
+                                                            </p>
+                                                        </li>
+                                                        <li><p>Now head over to your Infraguard homepage. <br/>
+                                     Administration --> Customers → Add Customer
+                                </p>
+                                                        <div class="zoom" onclick="window.open('images/add-customer.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                            <img src="images/add-customer.jpg" />
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                     Add 
+                                                            <b>Customer Name , Customer ARN</b> [ refer : SOP for creating a Role for communicating via SSM with InfraGuard], 
+                                                            <b>Customer external ID</b>
+                                                        </p>
+                                                        <div class="zoom" onclick="window.open('images/create-customer.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                            <img src="images/create-customer.jpg" />
+                                                        </div>
+                                                        <br/>
+                                                        <div class="zoom" onclick="window.open('images/edit-customer.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                            <img src="images/edit-customer.jpg" />
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                     Click on 
+                                                            <b>List All Instances</b> (as in the eboxed red in the screenshot below)
+                                
+                                                        </p>
+                                                        <div class="zoom" onclick="window.open('images/list-all-instances.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                            <img src="images/list-all-instances.jpg" />
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                     Click on Sync Instances → SSM Status (sync symbol)
+                                </p>
+                                                        <div class="zoom" onclick="window.open('images/sync-instances.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                            <img src="images/sync-instances.jpg" />
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                     Assign the Servers to Company  → Project
+                                </p>
+                                                        <div class="zoom" onclick="window.open('images/assign-servers-to-company-project.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                            <img src="images/assign-servers-to-company-project.jpg" />
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                     Issues after onboarding Servers to InfraGuard
+                                </p>
+                                                        <ul style="margin-left: 30px;">
+                                                            <li>InfraGuard website becomes slow</li>
+                                                            <li>No Green Light on Servers</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                    How to create a User in InfraGuard
+                                </p>
+                                                        <ul style="margin-left: 30px;">
+                                                            <li>The User is created by the Administrator</li>
+                                                            <li>Click “Add User” button → Add User Pop-up form will come up (As in the Screenshot Below)</li>
+                                                            <li>Enter Username (First Name (one word only))</li>
+                                                            <li>Enter Email</li>
+                                                            <li>Password</li>
+                                                            <li>Select Role</li>
+                                                            <li>Select Group (the Group of Company or Companies) and click ok</li>
+                                                            <li>Send the User details to the User’s Email</li>
+                                                            <li>The User will show-up in the User’s Tab of Administration</li>
+                                                        </ul>
+                                                        <br/>
+                                                        <div class="zoom" onclick="window.open('images/add-user.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                            <img src="images/add-user.jpg" />
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                    How to create a Policy and attach the Policy created to a Role in InfraGuard
+                                     
+                                                            <br/>
+                                    Note : A Policy has to be created first and then attached to a Role
+                                
+                                                        </p>
+                                                        <ul style="margin-left: 30px;">
+                                                            <li>
+                                                                <p>Enter the Policy Name (TestPolicy) , Policy Description and choose the Policy permissions to be granted in Policy TestPolicy for Company , Project and Server (as in the Screenshot below)
+                                        </p>
+                                                                <div class="zoom" onclick="window.open('images/create-policy.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                                    <img src="images/create-policy.jpg" />
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <p>
+                                            After Clicking OK , the Policy will show up in the Policy Tab
+                                        </p>
+                                                                <div class="zoom" onclick="window.open('images/policy-tab.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                                    <img src="images/policy-tab.jpg" />
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <p>
+                                            After the Policy is created , then create Role (TestRole) → Role Description → Select the Policy (TestPolicy in a., b. above) created → click OK . A Role (TestRole) with Policy (TestPolicy) is created
+                                        </p>
+                                                                <div class="zoom" onclick="window.open('images/create-role.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                                    <img src="images/create-role.jpg"/>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                     How to create a Group in InfraGuard
+                                </p>
+                                                        <p>
+                                                            <b>Note: </b> If a new Project is created and Server(s) assigned into that Project, then to give access to the new Server(s) in the Project to the Users of InfraGuard that particular Project has to be enabled (checked) in the Group 
+                                
+                                                        </p>
+                                                        <ul style="margin-left: 30px;">
+                                                            <li>
+                                                                <p>Enter Group Name (TestGroup) → Group Description → Assign the Company (RightCloud) , Projects (InfraGuard , EagleEye )  → Click OK [as in the Screenshot below]
+                                        </p>
+                                                                <div class="zoom" onclick="window.open('images/add-group.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                                    <img src="images/add-group.jpg"/>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                        So after this , Any User has to be granted access to the Group (TestGroup) created for the User to access the Server(s) in the Group
+                                    </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+
+
+                                <a name="role-on-main-instance"></a>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <section>
+        <div class="deactivate"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                    <h2 class="section-title">Creating an IAM Role on the InfraGuard Main Instance</h2>
+                    <hr>
+                        <p>Create an IAM Role infraguard-switchrole with the following Permissions (as in the enboxed red below)
+</p>
+                        <div class="zoom" onclick="window.open('images/infraguard-switchrole.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                            <img src="images/infraguard-switchrole.jpg" />
+                        </div>
+                        <ul>
+                            <li>
+                                <p>
+                                    Create 
+                                    <b>infraguard-switch-policy</b> Managed Policy as in the screenshot below
+                                
+                                </p>
+                                <div class="zoom" onclick="window.open('images/infraguard-switch-policy.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                    <img src="images/infraguard-switch-policy.jpg" />
+                                </div>
+                                <p>With the following JSON (copy and paste the JSON ) :</p>
+                                <pre><code style="font-size: 0.8em;" class="lang-json">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "sts:AssumeRole"
+            ],
+            "Resource": "arn:aws:iam::*:role/*"
+        }
+    ]
+}
+</code></pre>
+                            </li>
+                            <li>
+                                <p>
+                                    Attach 
+                                    <b>AmazonSSMFullAccess</b>
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    Create 
+                                    <b>EC2DescribeInstances</b> Inline Policy as in the screenshot below
+                                
+                                </p>
+                                <div class="zoom" onclick="window.open('images/EC2DescribeInstances.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                    <img src="images/EC2DescribeInstances.jpg" />
+                                </div>
+                                <p>With the following JSON (copy and paste the JSON ) :</p>
+                                <pre><code style="font-size: 0.8em;" class="lang-json">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "ec2:DescribeInstances",
+            "Resource": "*"
+        }
+    ]
+}
+</code></pre>
+                            </li>
+                            <li>
+                                <p>
+                                    Create 
+                                    <b>InfraGuardAWSCloudTrail</b> Inline Policy as in the screenshot below
+                                
+                                </p>
+                                <div class="zoom" onclick="window.open('images/InfraGuardAWSCloudTrail.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                    <img src="images/InfraGuardAWSCloudTrail.jpg" />
+                                </div>
+                                <p>With the following JSON (copy and paste the JSON ) :</p>
+                                <pre><code style="font-size: 0.8em;" class="lang-json">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "cloudtrail:LookupEvents",
+            "Resource": "*"
+        }
+    ]
+}
+
+</code></pre>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <a id="create-activation"></a>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <section>
+                                <div class="deactivate"></div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                                            <h2 class="section-title">How to create an Activation?</h2>
+                                            <hr>
+                                                <p>
+                            Run the following command on the AWS CLI (after logging into the the aws cli with the command → aws configure (with AWS Access Key ID and AWS Secret Access Key) : 
+                            
+                                                    <br/>
+                                                    <b>
+                                (Note : the Activation is for one month only (that cannot be for more than a month) , you have to create another activation for Another month for the Hybrid instances to work , and the Hybrid instances with new Activation Code / Activation ID / Region has to be enabled with the code above)
+                            </b>
+                                                </p>
+                                                <pre><code style="font-size: 0.8em;" class="lang-json">aws ssm create-activation --default-instance-name ActivationInstance --iam-role service-role/AmazonEC2RunCommandRoleForManagedInstances  --registration-limit 1000 --expiration-date 2018-05-13T00:00+08:00 --region ap-southeast-1</code></pre>
+                                                <p>
+                            And you will get the activation as in the screenshot below on the AWS CLI and console:
+                        </p>
+                                                <div class="zoom" onclick="window.open('images/activation.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                    <img src="images/activation.jpg" />
+                                                </div>
+                                                <br/>
+                                                <div class="zoom" onclick="window.open('images/activation-console.jpg', '_blank');" style="cursor:pointer;" target="_blank">
+                                                    <img src="images/activation-console.jpg" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+
+                                <a href="#/documentation#" class="back-to-top">
+                                    <i class="fa fa-arrow-circle-up"></i>
+                                </a>
+    <script>
+     jQuery(document).ready(function() {
+     var offset = 250;
+     var duration = 300;
+     jQuery(window).scroll(function() {
+     if (jQuery(this).scrollTop() > offset) {
+     jQuery(".back-to-top").fadeIn(duration);
+     } else {
+     jQuery(".back-to-top").fadeOut(duration);
+     }
+     });
+     
+     
+     jQuery(".back-to-top").click(function(event) {
+     event.preventDefault();
+     jQuery("html, body").animate({scrollTop: 0}, duration);
+     return false;
+     })
+     });
+     
+    </script>
+                            </section>
+                            <style>
+.anchorTextOnHover {
+    color: inherit;
+}
+
+.zoom {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+}
+
+.zoom:hover {
+    transform: scale(1.3); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+.table-of-contents {
+    border-radius: 5px;
+    padding: 50px 40px 40px;
+    max-width: 500px;
+    margin-bottom: 40px;
+}
+.back-to-top { 
+    background: none; 
+    margin: 10px; 
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px; 
+    width: 70px; 
+    height: 70px; 
+    z-index: 100; 
+    display: none; 
+    text-decoration: none; 
+    color: #f5f5f5; 
+}
+.back-to-top i {
+ 
+  font-size: 60px;
+ 
+}
+
+pre code { white-space: pre; }
+
+pre {
+   font-family: Consolas,monospace;
+   font-size: 14px;
+}
+
+
+</style>

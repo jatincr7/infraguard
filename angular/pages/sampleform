@@ -1,0 +1,21 @@
+<form class="form-header" action="" method="POST" ng-controller="searchServerController">
+    <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports...">
+        <input class="au-input au-input--xl" list="a1" ng-model="a1">
+        <datalist id="a1">
+            <option value="project name">
+            <option value="instance id">
+            <option value="others">
+        </datalist>
+        <span ng-if="a1">:</span>
+        <input class="au-input au-input--xl" list="a2" ng-model="a2">
+        <datalist id="a2">
+            <option value="{{x.companyName}}" ng-repeat='x in arr1'>
+        </datalist>
+        <span ng-if="a1&&a2">:</span>
+        <input class="au-input au-input--xl" list="a3" ng-model="a3">
+        <datalist id="a3">
+            <option value="{{x.projectName}}" ng-repeat='x in arr2'>
+        </datalist>
+        
+
+</form>

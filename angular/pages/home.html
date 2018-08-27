@@ -1,0 +1,220 @@
+﻿<link rel="stylesheet" href="css/style12.css">
+<section class="Profilesection" style="padding-top: 100px;padding-right: 20px;">
+
+        
+        
+
+
+    <div class="row">
+        <div class="col">
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="m-0" style="color: inherit;">Projects
+                    <div style="float: right;margin-left: 10px;margin-bottom: 5px;color: inherit">
+                        <span style="font-size: 12px;">Sort By</span>
+                        <a><button ng-click="sortProjectBy('id'); projectReverse = true" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">Recent</button>
+                            <span class="sortorder" ng-show="projectProperty === 'id'"></span></a>
+                        <a><button ng-click="sortProjectBy('-servers.length')" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">No. of Servers</button>
+                            <span class="sortorder" ng-show="projectProperty === 'servers.length'" ng-class="{projectReverse: projectReverse}"></span></a>
+                        <a><button ng-click="sortProjectBy('projectName')" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">Alphabetically</button>
+                            <span class="sortorder" ng-show="projectProperty === 'projectName'" ng-class="{projectReverse: projectReverse}"></span></a>
+                    </div>
+                </h4>
+                </div>
+                <div class="card-body p-0 text-center" style="min-height: 160px;max-height:270px;overflow-y: auto;">
+                    <table class="table mb-0 table-striped">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">Project Name</th>
+                                <th scope="col" class="border-0">Company Name</th>
+                                <th scope="col" class="border-0">Live Servers</th>
+                                <th scope="col" class="border-0">Total Servers</th>
+                                <!--
+                                <th scope="col" class="border-0">Settings</th>
+                                 -->
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="project in projects| orderBy:projectProperty:projectReverse">
+                                <td scope="col" class="border-0"><a class="anchorTextOnHover" href="#/server" ng-click="setProjectId(project.id)">{{ project.projectName}}</a></td>
+                                <td scope="col" class="border-0">{{project.companyName}}</td>
+                                <td scope="col" class="border-0">{{project.Liveservers.length}}</td>
+                                <td scope="col" class="border-0">{{project.servers.length}}</td>
+                                <!--
+                                <td scope="col" class="border-0">
+                                    <div class="dropdown">
+                                        <a class="spinner" href="javascript:void(0)" ng-click="$parent.selectedIndex = $index; showOptions($index)"><img src="images/setting.png"></a>
+                                        <div class="dropdown-content" style='min-width:175px;'>
+                                            <a ng-if="userElements.indexOf(5) != -1" href="javascript:void(0)" ng-click="showPopup('editProject', project.id, project.projectName, $index)">Edit Project</a>
+                                            <a ng-if="userElements.indexOf(25) != -1" href="javascript:void(0)" ng-click="showPopup('deleteProject', project.id, project.projectName, $index)">Delete Project</a>
+                                            <a ng-if="project.servers.length > 0 && userElements.indexOf(11) != -1" href="javascript:void(0)" ng-click="showPopup('updateServerKey', project.id)">Update Server Key</a>
+                                            <a ng-if="project.servers[0].autoKeyRotation == 0 && userElements.indexOf(12) != -1" href="javascript:void(0)" ng-click="showPopup('startKeyAutoRotation', project.id)">Start Auto Key Rotation</a>
+                                            <a ng-if="project.servers[0].autoKeyRotation == 1 && userElements.indexOf(13) != -1" href="javascript:void(0)" ng-click="showPopup('stopKeyAutoRotation', project.id)">Stop Auto Key Rotation</a>
+                                            <a href="javascript:void(0)" ng-click="createScheduler(project.id)">Schedule Start/Stop</a>
+                                        </div>
+                                    </div>
+                                </td>
+                              -->
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <a href="#/project" style="float: right;margin-left: 10px;margin-right: 10px;">
+                        <button class="btn btn-secondary btn-sm viewAll">View All</button>
+                    </a>
+                    <button ng-click="showProjectModal()" class="btn btn-secondary btn-sm addDetail" style="float: right">Add Project</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div style="padding-top: 50px"></div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="m-0" style="color: inherit;">Companies
+                    <div style="float: right;margin-left: 10px;margin-bottom: 5px;color: inherit">
+                        <span style="font-size: 12px;">Sort By</span>
+                        <a><button ng-click="sortCompanyBy('id'); companyReverse = true" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">Recent</button>
+                            <span class="sortorder" ng-show="companyProperty === 'id'"></span></a>
+                        <a><button ng-click="sortCompanyBy('-servers.length')" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">No. of Servers</button>
+                            <span ng-show="companyProperty === 'servers.length'" ng-class="{companyReverse: companyReverse}"></span></a>
+                        <a><button ng-click="sortCompanyBy('companyName')" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">Alphabetically</button>
+                            <span class="sortorder" ng-show="companyProperty === 'companyName'" ng-class="{companyReverse: companyReverse}"></span></a>
+                    </div>
+                </h4>
+                </div>
+                <div class="card-body p-0 pb-3 text-center" style="min-height: 160px;max-height:270px;overflow-y: auto;">
+                    <table class="table mb-0 table-striped" >
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">Company Name</th>
+                                <th scope="col" class="border-0">Live Servers</th>
+                                <th scope="col" class="border-0">Total Servers</th>
+                                <th scope="col" class="border-0">Settings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="company in compnaies| orderBy:companyProperty:companyReverse">
+                                <td scope="col" class="border-0"><a class="anchorTextOnHover" href="#/project" ng-click="setCompanyId(company.id)">{{ company.companyName}}</a></td>
+                                <td scope="col" class="border-0">{{company.Liveservers.length}}</td>
+                                <td scope="col" class="border-0">{{company.servers.length}}</td>
+                                <td scope="col" class="border-0">
+                                    <div class="dropdown">
+                                        <a class="spinner" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" href="javascript:void(0)" ng-click="$parent.selectedIndex = $index; showOptions($index)"><img src="images/setting.png"></a>
+                                        <div class="dropdown-content" style=" font-weight: normal; min-width: 120px; text-align: left">
+                                            <a ng-if="userElements.indexOf(2) != -1" href="javascript:void(0)" ng-click="showCompanyEditModal(company.id, company.companyName, $index)">Edit Company</a>
+                                            <a ng-if="userElements.indexOf(3) != -1" href="javascript:void(0)" ng-click="DeleteCompanyModal(company.id, $index)">Delete Company</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <a href="#/company" style="float: right;margin-left: 10px; margin-right: 10px;">
+                        <button class="btn btn-secondary btn-sm viewAll">View All</button>
+                    </a>
+                    <button ng-click="showCompanyModal()" class="btn btn-secondary btn-sm addDetail" style="float: right">Add Company</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div style="padding-top: 50px"></div>
+    <div ng-if="roleId == 1">
+        <div class="row">
+            <div class="col">
+                <div class="card card-small mb-4">
+                    <div class="card-header border-bottom">
+                        <h4 class="m-0" style="color: inherit;">Users
+                    <div style="float: right;margin-left: 10px;margin-bottom: 5px;color: inherit">
+                        <span style="font-size: 12px;">Sort By</span>
+                        <a><button ng-click="sortUserBy('lastlogin')" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">Last Active</button>
+                            <span class="sortorder" ng-show="userProperty === 'lastlogin'" ng-class="{userReverse: userReverse}"></span></a>
+                        <a><button ng-click="sortUserBy('roleName')" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">Role</button>
+                            <span class="sortorder" ng-show="userProperty === 'roleName'" ng-class="{userReverse: userReverse}"></span></a>
+                        <a><button ng-click="sortUserBy('uname')" class="mb-2 btn btn-sm btn-outline-secondary mr-1 addDetail">Alphabetically</button>
+                            <span class="sortorder" ng-show="userProperty === 'uname'" ng-class="{userReverse: userReverse}"></span></a>
+                    </div>
+                </h4>
+                    </div>
+                    <div class="card-body p-0 text-center" style="min-height: 160px;max-height:270px;overflow-y: auto;">
+                        <table class="table mb-0 table-striped">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="border-0">Name</th>
+                                    <th scope="col" class="border-0">Role</th>
+                                    <th scope="col" class="border-0">Last Active Project</th>
+                                    <th scope="col" class="border-0">Last Activity</th>
+                                    <th scope="col" class="border-0">Settings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr ng-repeat="user in usersdata| orderBy:userProperty:userReverse">
+                                    <td scope="col" class="border-0">{{ user.uname}}</td>
+                                    <td scope="col" class="border-0">{{ user.roleName}}</td>
+                                    <td scope="col" class="border-0"></td>
+                                    <td scope="col" class="border-0">
+                                        <a href="#/userTrail" ng-click="setUserId(user.id)">
+                                            <button class="btn btn-outline-secondary btn-sm viewLog">View Log</button>
+                                        </a>
+                                    </td>
+                                    <td scope="col" class="border-0">
+                                        <div class="dropdown">
+                                            <a class="spinner" href="javascript:void(0)" ng-click="$parent.selectedIndex = $index; showOptions($index)"><img src="images/setting.png"></a>
+                                            <div class="dropdown-content">
+                                                <a href="javascript:void(0)" ng-click="editUserModal(user.id, user.uname, user.email, user.roleId, numPerPage * (currentPage - 1) + $index, user.groupId)">Edit User</a>
+                                                <a href="javascript:void(0)" ng-click="deleteUserModal(user.id, numPerPage * (currentPage - 1) + $index)">Delete User</a>
+                                                <a href="javascript:void(0)" ng-click="changePassword(user.id, user.passw)">Change Password</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#/administration" style="float: right;margin-left: 10px;margin-right: 10px;">
+                            <button class="btn btn-secondary btn-sm viewAll">View All</button>
+                        </a>
+                        <button ng-click="showUserModal()" class="btn btn-secondary btn-sm addDetail" style="float: right">Add User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 30px"></div>
+
+</section>
+<style>
+    table tbody {
+        min-height: 60px;
+        max-height: 300px;
+        overflow-y: auto;
+        position: relative;
+        overflow-x: hidden;
+    }
+    
+    .card {
+        min-height: 100px;
+    }
+    
+    .anchorTextOnHover {
+        color: inherit;
+    }
+
+    
+
+</style>

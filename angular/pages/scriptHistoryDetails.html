@@ -1,0 +1,21 @@
+<section class="Profilesection" style="padding-top: 100px; padding-left: 20px;padding-right: 20px">
+            <div class="companyDetailsBg addCompanyDetail">
+                <div class="profileHead"><a href="#/scriptHistory" ng-click="setScriptId(historyDetail.id)" style="float:left;margin-top: -3px;margin-left: 10px"><button type="button" class="btn btn-info btn-sm"><< Back</button></a>&nbsp;&nbsp;{{historyDetail.script_name}}</div>
+                <div>
+                    <p style="font-weight: bold;">Script Description : <span style="font-weight: normal;">{{historyDetail.script_desc}}</span></p>
+                    <p style="font-weight: bold;">Script to be run : <span style="font-weight: normal;white-space: pre;">{{historyDetail.script}}</span></p>
+                    <p style="font-weight: bold;">Server IP : {{ historyDetail.serverIp }}</p>
+                    <p style="font-weight: bold;">Script run time : <span style="font-weight: normal;">{{ historyDetail.script_run_time |date:'yyyy-MM-dd hh:mm' }}</span></p>
+                </div>
+                
+                
+                <div style="border:1px solid black;height:250px;margin-top: 30px;">
+                    <p style="font-weight: bold;font-size: 20px;text-align: center;">Output Window</p>
+                    <div class="output_window" style="padding: 20px;color: black;white-space: pre;overflow-y: auto;height:150px">{{ historyDetail.command_output }}</div>
+                </div>
+            </div> 
+</section>
+<style>
+    table tr td{text-align: center;}table tr th{text-align: center;font-weight: bold;}
+    .btn-xs,.btn-xs:hover{background-color: #17a0a2;border-color: #17a0a2;}
+</style>

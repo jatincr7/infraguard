@@ -1,0 +1,826 @@
+<link rel="stylesheet" href="css/style12.css">
+<section class="Profilesection" style="padding-top: 90px; padding-left: 15px;padding-right: 20px">
+    <div class="companyDetailsBg" style="padding-top: 0px;">
+        <div style="margin-bottom: 8px;font-size: 16px;float: left;margin-left: 15px;"><a href="#/" style="color:#2670B7;"><i class="fa fa-home" aria-hidden="true"></i></a>/<a href="#/project" ng-click="setCompanyId(servers[0].company_id)" style="color:#2670B7;font-size:13px;">{{servers[0].companyName}}</a>/<a href="#/server" ng-click="setProjectId(servers[0].project_id)" style="color:#2670B7;font-size:13px;">{{servers[0].projectName}}</a>/<a style="font-size:13px">{{servers[0].serverName}}</a></div>
+        <div class="clearfix"></div>
+
+
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 my-flex-item">
+                        <h3>
+                        <span ng-if="ssmAgentStatus == 'Alive' || ssmAgentStatus == 'Online'"><img style="width:15px;margin-top:-6px;" src="images/green-circle.png"/></span>
+                        <span ng-if="ssmAgentStatus == 'Stop' || ssmAgentStatus == 'Inactive' || ssmAgentStatus == 'ConnectionLost' || ssmAgentStatus == 'Error'"><img style="width:15px;margin-top:-6px;" src="images/grey_circle.png"/></span>
+                        {{servers[0].serverName}}
+                        <label class="switch" ng-if="userElements.indexOf(18) != -1">
+                            <input class="instance" type="checkbox" ng-checked="instaceFlag == 0" ng-click="startStopInstance(servers[0].id)">
+                            <span class="slider round" data-toggle="tooltip" title="Start/Stop Server"></span>
+                        </label> 
+                        </h3>
+                    </div>
+                    <div class="p-2 my-flex-item">
+                        <div class="d-flex flex-row justify-content-start my-flex-container">
+                                <div class="p-2 my-flex-item">
+                                    <a  class="spinner" ng-click="refreshPage(servers[0].id)" style="cursor: pointer"><img src="images/refresh_aws.png"></a>&nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div class="p-2 my-flex-item">
+                                    <div class="dropdown">
+                                        <a class="dropbtn" href="javascript:void(0)" ng-click="$parent.selectedIndex = $index;showOptions($index)"><img src="images/setting.png"></a>&nbsp;&nbsp;&nbsp;
+                                        <div class="dropdown-content">
+                                            <!--<a ng-if = "server.users.indexOf(name.toLowerCase()) != -1  && userElements.indexOf(23) != -1" href="javascript:void(0)" ng-click="showUserModal('getAccessKey', servers[0].id)">Get Access Key</a>-->
+                                            <a ng-if="userElements.indexOf(7) != -1 && servers[0].platform != 'Windows'" href="javascript:void(0)" ng-click="showUserModal('adduser', servers[0].id)">Add User</a>
+                                            <!--<a ng-if="userElements.indexOf(8) != -1 && servers[0].platform !='Windows'" href="javascript:void(0)" ng-click="showUserModal('deleteuser',  servers[0].id)">Delete User</a>-->
+                                            <!--<a ng-if="userElements.indexOf(9) != -1" href="javascript:void(0)" ng-click="showUserModal('changeprivilege', server.serverIP)">Change Privilege</a>-->
+                                            <a ng-if = "servers[0].lockedDown == 0 && userElements.indexOf(10) != -1" href="javascript:void(0)" ng-click="showUserModal('serverLockdown', servers[0].id)">LockDown Server</a>
+                                            <a ng-if = "servers[0].lockedDown == 1 && userElements.indexOf(22) != -1" href="javascript:void(0)" ng-click="showUserModal('serverUnlock', servers[0].id)">Unlock Server</a>
+                                            <a href="javascript:void(0)" ng-click="loginToServer(server.globalHostName, server.id, project.company_id, server.instanceId, server.customerIAMId, server.agentVersion, server.region, server.globalHostName, server.vpc_id)">Login to Server</a>
+                                            <!--<a ng-if="roleId ==1" href="javascript:void(0)" ng-click="showUserModal('assigncustomer', server.id,server.serverName,server.customerIAMId)">Assign Customer</a>-->
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="p-2 my-flex-item">
+                                <a><img src="images/question.png" data-toggle="tooltip" title="Reach us at: infraguardhelp@gmail.com"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="clearfix"></div>
+
+                <div class="d-flex flex-row justify-content-start my-flex-container">
+                    <div class="p-2 my-flex-item">
+                        Home Directory  - <span>{{homeDir}}</span>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+
+                <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 my-flex-item">
+
+                        <div class="progress-wrapper">
+                            <span class="progress-label"><b>Disk Space</b> - {{diskSpace}}</span>
+                            <div class="progress progress-lg">
+                              <div ng-class="{'progress-bar bg-success': diskPercentage <= 30 , 'progress-bar bg-info': 30 < diskPercentage && diskPercentage <= 80 , 'progress-bar bg-danger': 80 < diskPercentage && diskPercentage <= 100} " role="progressbar" ng-style="{ 'width' : diskWidth }" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>    
+                        </div>
+                        
+                    </div>
+                    <div class="p-2 my-flex-item">
+
+                        <div class="progress-wrapper">
+                            <span class="progress-label"><b>Memory Utilization</b> - {{memorySpace}}</span>
+                            <div class="progress progress-lg">
+                              <div ng-class="{'progress-bar progress-bar-striped progress-bar-animated bg-info': memoryPercentage <= 40 , 'progress-bar progress-bar-striped progress-bar-animated bg-warning': 40 < memoryPercentage && memoryPercentage <= 80 , 'progress-bar progress-bar-striped progress-bar-animated bg-danger': 80 < memoryPercentage && memoryPercentage <= 100} " role="progressbar" ng-style="{ 'width' : memoryWidth }" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>    
+                        </div>
+
+                    </div>
+                    <div class="p-2 my-flex-item">
+
+                        <div class="progress-wrapper">
+                            <span class="progress-label"><b>CPU Utilization</b> - {{CPU}}</span>
+                            <div class="progress progress-lg">
+                              <div ng-class="{'progress-bar progress-bar-striped bg-success': cpuPercentage <= 40 , 'progress-bar progress-bar-striped bg-info': 40 < cpuPercentage && cpuPercentage <= 80 , 'progress-bar progress-bar-striped bg-danger': 80 < cpuPercentage && cpuPercentage <= 100} " role="progressbar" ng-style="{ 'width' : cpuWidth }" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>    
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="d-flex flex-row justify-content-around my-flex-container" ng-if="buffer != '' && buffer != null">
+                    <div class="p-2 my-flex-item">
+                        <span class="progress-label"><b>Buffer</b> - {{buffer}}</span>
+                    </div>
+                    <div class="p-2 my-flex-item">
+                        <span class="progress-label"><b>Cache</b> - {{cache}}</span>
+                    </div>
+                </div>
+
+                    
+                <div class="clearfix"></div>
+          
+            </div>
+        </div>
+
+<div class="clearfix"></div>
+
+<div class="card text-center">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs" ng-init='main.active.tab = "Details"'>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'Details' }">
+          <a class="nav-link" ng-click='main.active.tab = "Details"'>Details</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'Automation' }"  ng-if="userElements.indexOf(14) != -1">
+          <a class="nav-link" ng-click='main.active.tab = "Automation";clickAutomation()'>Automation</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'App Detection' }"  ng-if="userElements.indexOf(14) != -1">
+          <a class="nav-link" ng-click='main.active.tab = "App Detection";clearAppDetection()'>App Detection</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'Run Command' }" ng-if="userElements.indexOf(15) != -1">
+          <a class="nav-link" ng-click='main.active.tab = "Run Command";clearRunCommand()'>Run Command</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'Cron' }" ng-if="servers[0].platform != 'Windows'">
+          <a class="nav-link" ng-click='main.active.tab = "Cron"'>Cron</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'Process' }">
+          <a class="nav-link" ng-click='main.active.tab = "Process"'>Process</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'InfraTrail' }" ng-if="userElements.indexOf(19) != -1">
+          <a class="nav-link" ng-click='main.active.tab = "InfraTrail"'>InfraTrail</a>
+        </li>
+        <li class="nav-item" ng-if="userElements.indexOf(17) != -1" ng-class="{active: main.active.tab == 'Patches' }">
+          <a class="nav-link" ng-click='main.active.tab = "Patches";LoadPatches(servers[0].id)'>Patches</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'Users' }" ng-if="userElements.indexOf(21) != -1 && servers[0].platform != 'Windows'">
+          <a class="nav-link" ng-click='main.active.tab = "Users"'>Users</a>
+        </li>
+        <li class="nav-item" ng-class="{active: main.active.tab == 'CloudTrail' }" ng-if="userElements.indexOf(24) != -1 && servers[0].instanceId.indexOf('mi-') == -1">
+          <a class="nav-link" ng-click='main.active.tab = "CloudTrail";ShowCloudTrail(servers[0].instanceId, servers[0].id)'>CloudTrail</a>
+        </li>
+      </ul>
+    </div>
+    <div class="card-body" ng-switch='main.active.tab'>
+       
+        <div ng-switch-when='Details'>
+            <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 my-flex-item">
+                        <table class="serverTable" ng-if="instanceDetails != null">
+                            <tr>
+                                <td>Instance ID</td>
+                                <td>{{instanceDetails.InstanceId}}</td>
+                            </tr>
+                            <tr>
+                                <td>Key Name</td>
+                                <td>{{instanceDetails.KeyName}}</td>
+                            </tr>
+                            <tr>
+                                <td>Instance Type</td>
+                                <td>{{instanceDetails.InstanceType}}</td>
+                            </tr>
+                            <tr>
+                                <td>Availability Zone</td>
+                                <td>{{instanceDetails.Placement.AvailabilityZone}}</td>
+                            </tr>
+                            <tr>
+                                <td>Security groups</td>
+                                <td>{{groupName}}</td>
+                            </tr>
+                            <tr>
+                                <td>Security groups Id</td>
+                                <td>{{groupId}}</td>
+                            </tr>
+                            <tr>
+                                <td>Root device type</td>
+                                <td>{{instanceDetails.RootDeviceType}}</td>
+                            </tr>
+                            <tr>
+                                <td>Root device</td>
+                                <td>{{instanceDetails.RootDeviceName}}</td>
+                            </tr>
+                            <tr>
+                                <td>OS version</td>
+                                <td>{{osVersion}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="p-2 my-flex-item">
+                        <table class="serverTable" ng-if="instanceDetails != null">
+                            <tr>
+                                <td>Public DNS (IPv4)</td>
+                                <td>{{instanceDetails.PublicDnsName}}</td>
+                            </tr>
+                            <tr>
+                                <td>IPv4 Public IP</td>
+                                <td>{{instanceDetails.PublicIpAddress}}</td>
+                            </tr>
+                            <tr>
+                                <td>Private DNS</td>
+                                <td>{{instanceDetails.PrivateDnsName}}</td>
+                            </tr>
+                            <tr>
+                                <td>Private IP</td>
+                                <td>{{instanceDetails.PrivateIpAddress}}</td>
+                            </tr>
+                            <tr>
+                                <td>VPC ID</td>
+                                <td>{{instanceDetails.VpcId}}</td>
+                            </tr>
+                            <tr>
+                                <td>Subnet ID</td>
+                                <td>{{instanceDetails.SubnetId}}</td>
+                            </tr>
+                            <tr>
+                                <td>Launch Time</td>
+                                <td>{{instanceDetails.LaunchTime}}</td>
+                            </tr>
+                            <tr>
+                                <td>Virtualization</td>
+                                <td>{{instanceDetails.VirtualizationType}}</td>
+                            </tr>
+                            <tr>
+                                <td>Tenancy</td>
+                                <td>{{instanceDetails.Placement.Tenancy}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="p-2 my-flex-item">
+                        <table class="serverTable" ng-if="instanceDetails == null" style="float:left;margin-left: 20px;">
+                            <tr>
+                                <td>OS version</td>
+                                <td>{{osVersion}}</td>
+                            </tr>
+                            <tr>
+                                <td>Instance ID</td>
+                                <td>{{servers[0].instanceId}}</td>
+                            </tr>
+                            <tr>
+                                <td>Private IP</td>
+                                <td>{{servers[0].serverIP}}</td>
+                            </tr>
+                            <tr>
+                                <td>Availability Zone</td>
+                                <td>{{servers[0].region}}</td>
+                            </tr>
+                        </table>
+                    </div>
+              </div>
+        </div>
+        <div ng-switch-when='Automation'>
+                <div class="d-flex flex-row justify-content-end my-flex-container">
+                    <div class="p-2 my-flex-item">
+                        <a href="javascript:void(0)" ng-click="createServerScriptModel(servers[0].project_id)"><button type="button" class="btn btn-primary btn-sm btnpadding">Create Script</button></a>
+                    </div>
+                 </div>
+                 <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 my-flex-item" ng-if="serverTop10Script == ''">
+                        No Automation script is available.
+                    </div>
+                 </div>
+                 <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 my-flex-item">
+
+                        <table class="table" ng-if="serverTop10Script.length > 0" style="border: 2px solid #ddd">
+                            <thead>
+                                <tr>
+                                    <th class="col-xs-1">#</th>
+                                    <th class="col-xs-4">Script Name</th>
+                                    <th class="col-xs-4">Script Desc</th>
+                                    <th class="col-xs-3">&nbsp;&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in serverTop10Script.slice(0, 10)">
+                                    <td class="col-xs-1">{{$index + 1}}</td>
+                                    <td class="col-xs-4">{{ row.script_name}}</td>
+                                    <td class="col-xs-4">{{ row.script_desc}}</td>
+                                    <td class="col-xs-3">
+                                        <a ng-click='viewScript(row.script, row.script_name)'><button type="button" class="btn btn-info btn-sm">View</button></a>
+                                        <a ng-click='runScript(row.id, row.script_name, row.script, row.script_desc, servers[0].id, servers[0].serverIP)'><button type="button" class="btn btn-info btn-sm">Run</button></a>
+                                        <a href="javascript:void(0)" ng-click='deleteScript(row.id, row.script_name, $index)'><img width="20px" src="images/delete_icon.png"/></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="p-2 col-lg-5 my-flex-item" ng-if="serverTop10Script.length > 0">
+                        <div style="border: 1px solid #ddd;border-radius: 5px;height:270px;overflow-y: auto;padding-left: 20px;" >
+                            <p style="font-weight: bold;font-size: 20px;text-align: center;color:#666;">Output Window</p>
+                            <p style="white-space: pre;font-family: monospace;font-size:15px;">{{response}}</p>
+                        </div>
+                        <a ng-click="downloadOutput()" ng-href="{{ fileUrl}}" download="output.txt" style="margin-top: 10px; float: right"><button type="button" class="btn btn-primary btn-sm btnpadding" ng-show="Output">Download Output</button></a>
+                    </div>
+                 </div>
+        </div>
+        <div ng-switch-when='App Detection'>
+
+                    <div class="d-flex flex-row flex-wrap my-flex-container">
+                        <div class="p-2 my-flex-item">
+                            <button class="btn btn-info btn-sm btnpadding" ng-click="checkAutoAppsStatus();">Update App Status</button>
+                        </div>
+                        <div class="p-2 my-flex-item">
+                            <span style="font-weight: bold; color: black;">{{autoUpdateScript}}</span><br/><br/>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap my-flex-container">
+                        <div class="p-2 col-lg-5 my-flex-item">
+                            <div style="border: 0px solid #ddd;width: 100%;height: 250px;">
+                                <div class="d-flex flex-row justify-content-start my-flex-container">
+                                    <div class="p-2 my-flex-item margins" ng-repeat="runningapps in serverRunningApps" style="display: flex;">
+                                        <div class="d-flex flex-column my-flex-container-column" style="flex: 1;">
+                                            <div class="p-2 mt-auto my-flex-item">
+                                                <a href='' id="runningAppDetails" ng-click="runningAppDetails($event)" style="flex-shrink: 0;">
+                                                    <img class="img-fluid img-thumbnail" id="{{runningapps.id}}" src="{{runningapps.icon}}" alt="{{runningapps.appstatus}}" style="min-height: 62px !important">
+                                                </a>
+                                            </div>
+                                            <div class="p-2 mt-auto my-flex-item">
+                                                <div class="d-flex flex-row justify-content-between align-items-center my-flex-container">
+                                                    <div class="p-2 my-flex-item">
+                                                        <span style="word-wrap: break-word;">{{runningapps.name}}</span>
+                                                    </div>
+                                                    <div class="p-2 my-flex-item" ng-if="runningapps.appstatus == 'Yes'">
+                                                        <span class="dot-green" style="vertical-align: middle;"/>
+                                                    </div>
+                                                    <div class="p-2 my-flex-item" ng-if="runningapps.appstatus == 'No'">
+                                                        <span class="dot-red" style="vertical-align: middle;"/>
+                                                    </div>
+                                                </div>        
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
+                        </div>
+                        <div class="p-2 col-lg-3 my-flex-item">
+                            <div class="d-flex flex-column my-flex-container-column">
+                                <div class="p-2 mb-auto my-flex-item" ng-repeat="serverapps in serverAppStatus | filter:{application_id: autoAppID}" ng-show = "IsVisible">
+                                    <button ng-disabled = "IsAppDisabled" class="btn btn-success btn-sm btnpadding" style="min-width: 160px;" ng-click='runAutoStatus($event)' id="{{serverapps.command}}">{{serverapps.name | uppercase}}</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="p-2 col-lg-4 my-flex-item">
+                            <div style="border: 2px solid #ddd;height:250px;overflow-y: auto;padding-left: 20px;">
+                                <p style="font-weight: bold;font-size: 20px;text-align: center;color:#666;">Output Window</p>
+                                <p style="white-space: pre;font-family: monospace;font-size:15px;">{{autoScriptOutput}}</p>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+        <div ng-switch-when='Run Command'>
+
+                <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 col-lg-6 col-md-6 my-flex-item">
+                           <div class="mbr-subscribe input-group" style="width: 100%;">
+                            <textarea autofocus style="height:250px;" class="form-control scriptToRun" placeholder="Enter Command to run"></textarea>
+                        </div>
+                        <div style="text-align: center;margin-top:12px;width: 100%;">
+                            <a ng-click='runScript("0", servers[0].serverName, row.script, servers[0].serverName, servers[0].id, servers[0].serverIP)'>
+                                <button type="button" class="btn btn-primary btn-sm btnpadding">Run</button>
+                            </a>
+                        </div>
+                    </div>
+                     <div class="p-2 col-lg-6 col-md-6 my-flex-item">
+                        <div style="border: 1px solid #ddd;border-radius: 5px;height:250px;width:100%; overflow-y: auto;padding-left: 20px;">
+                            <p style="font-weight: bold;font-size: 20px;text-align: center;color:#666;">Output Window</p>
+                            <p style="white-space: pre;font-family: monospace;font-size:15px;">{{responseCommand}}</p>
+                        </div>
+                        <a ng-click="downloadOutput()" ng-href="{{ fileUrl}}" download="output.txt" style="margin-top: 10px; float: right"><button type="button" class="btn btn-primary btn-sm btnpadding" ng-show="Output">Download Output</button></a>
+                    </div>
+                </div>
+        </div>
+        <div ng-switch-when='Cron'>
+
+                <div class="d-flex flex-row justify-content-end my-flex-container">
+                    <div class="p-2 my-flex-item">
+						<a href="javascript:void(0)" ng-click="refreshCronList();" ng-if="servers.length > 0"><button type="button" class="btn btn-primary btn-sm btnpadding">Refresh List</button></a>
+                        <a href="javascript:void(0)" ng-click="showjobModal()" ng-if="servers.length > 0"><button type="button" class="btn btn-primary btn-sm btnpadding">Create Cron</button></a>
+                    </div>
+                 </div>
+
+                <div class="d-flex flex-row justify-content-center my-flex-container">
+                    <div class="p-2 my-flex-item" ng-if="CronJobs == ''" style="text-align: center;margin-top: 30px;font-size: 24px;">
+                        No cron is available for this server.
+                    </div>
+                 </div>
+
+                 <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 col-lg-12 col-md-12 col-sm-12 my-flex-item">
+                        <table ng-if="CronJobs.length > 0" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-xs-1">S.no</th>
+                                    <th class="col-xs-4">Job Name</th>
+                                    <th class="col-xs-5">Details</th>
+                                    <th class="col-xs-1">&nbsp;&nbsp;</th>
+                                    <th class="col-xs-1">&nbsp;&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="job in CronJobs">
+                                    <td class="col-xs-1">#{{$index + 1}}</td>
+                                    <td class="col-xs-4">{{ job.job_name}}</td>
+                                    <td class="col-xs-5">{{ job.minute + " " + job.hour + " " + job.day_of_month + " " + job.month + " " + job.day_of_week + " " + job.job_command}}</td>
+                                    <td class="col-xs-1"><a href="javascript:void(0)" ng-click="editjobModal(job.job_name, job.job_command, job.minute, job.hour, job.day_of_month, job.month, job.day_of_week, $index)" ng-if="servers.length > 0"><img width="20px" src="images/edit_icon.png"/></a></td>
+                                    <td class="col-xs-1"><a href="javascript:void(0)" ng-click='deleteCronFromServerModel(job.id, job.server_job_name, servers[0].id, servers[0].serverIP, job.minute + " " + job.hour + " " + job.day_of_month + " " + job.month + " " + job.day_of_week + " " + job.job_command, $index)'><img width="20px" src="images/delete_icon.png"/></a></td>
+                                </tr> 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+        <div ng-switch-when='Process'>
+              <div class="d-flex flex-row flex-wrap my-flex-container">
+                    <div class="p-2 col-lg-6 my-flex-item">
+                        <div style="text-align: center;font-size:16px;margin-bottom: 20px;" ng-if="topMemory.length > 0">Top Processes by Memory</div>
+                        <table class="table table-fixed" ng-if="topMemory.length > 0">
+                            <thead>
+                                <tr>    
+                                    <th class="col-xs-1">#</th>
+                                    <th class="col-xs-1">PID</th>
+                                    <th class="col-xs-1">USER</th>
+                                    <th class="col-xs-1">%CPU</th>
+                                    <th class="col-xs-1">%MEM</th>
+                                    <th class="col-xs-5">COMMAND</th>
+                                    <th class="col-xs-2"><a ng-click='display_more_processes("memory", "L", servers[0].id, servers[0].serverIp)'><button type="button" class="btn btn-primary btn-xs">More</button></a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in topMemory">
+                                    <td class="col-xs-1">{{$index + 1}}</td>
+                                    <td class="col-xs-1">{{row[1]}}</td>
+                                    <td class="col-xs-1">{{row[0]}}</td>
+                                    <td class="col-xs-1">{{row[2]}}</td>
+                                    <td class="col-xs-1">{{row[3]}}</td>
+                                    <td class="col-xs-5">{{row[10]}}</td>
+                                    <td class="col-xs-2"><a ng-click='killProcess(row[1], row[10])' ng-if="userElements.indexOf(16) != -1"><button type="button" class="btn btn-primary btn-xs">kill process</button></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="text-align: center;font-size:16px;margin-bottom: 20px;" ng-if="windowTopMemory.length > 0">Top Processes by Memory</div>
+                        <table class="table table-fixed" ng-if="windowTopMemory.length > 0">
+                            <thead>
+                                <tr>    
+                                    <th class="col-xs-1">#</th>
+                                    <th class="col-xs-1">PID</th>
+                                    <th class="col-xs-1">NPM(K)</th>
+                                    <th class="col-xs-1">PM(K)</th>
+                                    <th class="col-xs-1">WS(K)</th>
+                                    <th class="col-xs-1">CPU</th>
+                                    <th class="col-xs-4">Process</th>
+                                    <th class="col-xs-2"><a ng-click='display_more_processes("memory", "W", servers[0].id, servers[0].serverIp)'><button type="button" class="btn btn-primary btn-xs">More</button></a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in windowTopMemory">
+                                    <td class="col-xs-1">{{$index + 1}}</td>
+                                    <td class="col-xs-1">{{row[6]}}</td>
+                                    <td class="col-xs-1">{{row[2]}}</td>
+                                    <td class="col-xs-1">{{row[3]}}</td>
+                                    <td class="col-xs-1">{{row[4]}}</td>
+                                    <td class="col-xs-1">{{row[5]}}</td>
+                                    <td class="col-xs-4">{{row[7]}}</td>
+                                    <td class="col-xs-2"><a ng-click='killProcess(row[6], row[7])' ng-if="userElements.indexOf(16) != -1"><button type="button" class="btn btn-primary btn-xs">Kill Process</button></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="clearfix"></div>
+                        <div ng-if="(windowTopMemory.length > 0 || topMemory.length > 0) && userElements.indexOf(20) != -1"><b style="font-weight: bold;">Clean Caches :&nbsp;&nbsp;&nbsp;&nbsp;</b> 
+                            <a ng-click='cleanMemory("echo 1 > /proc/sys/vm/drop_caches", servers[0].serverIP, 1)'><button type="button" class="btn btn-primary btn-xs">Echo 1</button></a>&nbsp;&nbsp;&nbsp;
+                            <a ng-click='cleanMemory("echo 2 > /proc/sys/vm/drop_caches", servers[0].serverIP, 2)'><button type="button" class="btn btn-primary btn-xs">Echo 2</button></a>&nbsp;&nbsp;&nbsp;
+                            <a ng-click='cleanMemory("echo 3 > /proc/sys/vm/drop_caches", servers[0].serverIP, 3)'><button type="button" class="btn btn-primary btn-xs">Echo 3</button></a>
+                        </div>
+                    </div>
+                    <div class="p-2 col-lg-6 my-flex-item">
+                        <div style="text-align: center;font-size:16px;margin-bottom: 20px;" ng-if="topCPU.length > 0">Top Processes by CPU</div>
+                        <table class="table table-fixed" ng-if="topCPU.length > 0">
+                            <thead>
+                                <tr>    
+                                    <th class="col-xs-1">#</th>
+                                    <th class="col-xs-1">PID</th>
+                                    <th class="col-xs-1">USER</th>
+                                    <th class="col-xs-1">%CPU</th>
+                                    <th class="col-xs-1">%MEM</th>
+                                    <th class="col-xs-5">COMMAND</th>
+                                    <th class="col-xs-2"><a ng-click='display_more_processes("CPU", "L", servers[0].id, servers[0].serverIp)'><button type="button" class="btn btn-primary btn-xs">More</button></a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in topCPU">
+                                    <td class="col-xs-1">{{$index + 1}}</td>
+                                    <td class="col-xs-1">{{row[1]}}</td>
+                                    <td class="col-xs-1">{{row[0]}}</td>
+                                    <td class="col-xs-1">{{row[2]}}</td>
+                                    <td class="col-xs-1">{{row[3]}}</td>
+                                    <td class="col-xs-5">{{row[10]}}</td>
+                                    <td class="col-xs-2"><a ng-click='killProcess(row[1], row[10])' ng-if="userElements.indexOf(16) != -1"><button type="button" class="btn btn-primary btn-xs">Kill Process</button></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="text-align: center;font-size:16px;margin-bottom: 20px;" ng-if="windowTopCPU.length > 0">Top Processes by CPU</div>
+                        <table class="table table-fixed" ng-if="windowTopCPU.length > 0">
+                            <thead>
+                                <tr>    
+                                    <th class="col-xs-1">#</th>
+                                    <th class="col-xs-1">PID</th>
+                                    <th class="col-xs-1">NPM(K)</th>
+                                    <th class="col-xs-1">PM(K)</th>
+                                    <th class="col-xs-1">WS(K)</th>
+                                    <th class="col-xs-1">CPU</th>
+                                    <th class="col-xs-4">Process</th>
+                                    <th class="col-xs-2"><a ng-click='display_more_processes("CPU", "W", servers[0].id, servers[0].serverIp)'><button type="button" class="btn btn-primary btn-xs">More</button></a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in windowTopCPU">
+                                    <td class="col-xs-1">{{$index + 1}}</td>
+                                    <td class="col-xs-1">{{row[6]}}</td>
+                                    <td class="col-xs-1">{{row[2]}}</td>
+                                    <td class="col-xs-1">{{row[3]}}</td>
+                                    <td class="col-xs-1">{{row[4]}}</td>
+                                    <td class="col-xs-1">{{row[5]}}</td>
+                                    <td class="col-xs-4">{{row[7]}}</td>
+                                    <td class="col-xs-2"><a ng-click='killProcess(row[6], row[7])' ng-if="userElements.indexOf(16) != -1"><button type="button" class="btn btn-primary btn-xs">kill process</button></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+        </div>
+        <div ng-switch-when='InfraTrail'>
+
+
+            <div class="d-flex flex-row justify-content-between my-flex-container">
+                <div class="p-2 my-flex-item" ng-if="serverTrail == ''" style="text-align: center;margin-top: 30px;font-size: 24px;">
+                    No Server trail is available.
+                </div>
+              </div>
+            <div class="d-flex flex-row justify-content-between my-flex-container">
+                <div class="p-2 col-lg-12 my-flex-item" style="max-height:270px;overflow-y: auto;">
+                    <table ng-if="serverTrail.length > 0" class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-1">S.no</th>
+                            <th class="col-xs-3">Script Name</th>
+                            <th class="col-xs-3">Run by</th>
+                            <th class="col-xs-3">Run time</th>
+                            <th class="col-xs-2">&nbsp;&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in serverTrail">
+                            <td class="col-xs-1">#{{$index + 1}}</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '0'">Run Command</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-1'">Kill Process</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-2'">Memory Echo1</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-3'">Memory Echo2</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-4'">Memory Echo3</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-10'">LockDown Server</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-9'">unLock Server</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-8'">Add Server User</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-7'">Delete Server User</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-6'">Server Rotate Key</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-5'">Get Access Key</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-11'">Top Processes</td>
+                            <td class="col-xs-3" ng-if="row.script_id == '-12'">Download Key</td>
+                            <td class="col-xs-3" ng-if="row.script_id != '0' && row.script_id != '-1' && row.script_id != '-2' && row.script_id != '-3' && row.script_id != '-4' && row.script_id != '-10' && row.script_id != '-9' && row.script_id != '-8' && row.script_id != '-7' && row.script_id != '-6' && row.script_id != '-5' && row.script_id != '-11' && row.script_id != '-12'">{{row.script_name}}</td>
+                            <td class="col-xs-3">{{ row.email}}</td>
+                            <td class="col-xs-3">{{row.script_run_time|date:'yyyy-MM-dd hh:mm'}}</td>
+                            <td class="col-xs-2">
+                                <a ng-if="row.script_id != '0' && row.script_id != '-1' && row.script_id != '-2' && row.script_id != '-3' && row.script_id != '-4' && row.script_id != '-10' && row.script_id != '-9' && row.script_id != '-8' && row.script_id != '-7' && row.script_id != '-6' && row.script_id != '-5' && row.script_id != '-11' && row.script_id != '-12'" ng-click="showOutputModel(row.script, row.command_output)"><button type="button" class="btn btn-info btn-sm">Command & Output</button></a>
+                                <a ng-if="row.script_id == '0' || row.script_id == '-1' || row.script_id == '-2' || row.script_id == '-3' || row.script_id == '-4' || row.script_id == '-10' || row.script_id == '-9' || row.script_id == '-8' || row.script_id == '-7' || row.script_id == '-6' || row.script_id == '-5' || row.script_id == '-11' || row.script_id == '-12'" ng-click="showOutputModel(row.command, row.command_output)"><button type="button" class="btn btn-info btn-sm">Command & Output</button></a>
+                            </td>
+                        </tr> 
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <div ng-switch-when='Patches'>
+
+                <!--
+                <a href="javascript:void(0)" ng-click="createPatchMW(servers[0].id)"><button type="button" class="btn btn-primary btn-sm btnpadding">Create PatchMW</button></a>
+                
+                <a href="javascript:void(0)" ng-click="installPatchMW(servers[0].id)"><button type="button" class="btn btn-primary btn-sm btnpadding">Intsall PatchMW</button></a>
+                
+                <a href="javascript:void(0)" ng-click="scanPatchBaselineMW(servers[0].id)"><button type="button" class="btn btn-primary btn-sm btnpadding">Scan PatchBaseLineMW</button></a>
+                -->
+                
+                <div class="d-flex flex-row justify-content-end my-flex-container">
+                    <div class="p-2 my-flex-item">
+                        <a href="javascript:void(0)" ng-click="installPatchBaselineMW(servers[0].id)"><button type="button" class="btn btn-primary btn-sm btnpadding">Install All Patches</button></a>
+                    </div>
+                </div>  
+
+                <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 my-flex-item" style='text-align: center;margin-top: 30px;font-size: 24px;margin-bottom:30px; display:none;' ng-if='patchList == ""'>There is no patch maintenance window available for this instance.
+                    </div>
+                </div>      
+
+                <div class="d-flex flex-row justify-content-start my-flex-container" >
+                    <div class="p-2 my-flex-item" ng-if='patchList != ""'>
+                        <table class="serverTable table" ng-if="patchList.length > 0">
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Patch Name</th>
+                                <th>Cron Expression</th>
+                                <th>duration</th>
+                                <th>cutoff</th>
+                                <th>Operation Type</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="row in patchList">
+                                <td style="width:25px">{{$index + 1}}</td>
+                                <td>{{row.patch_name}}</td>
+                                <td>{{row.cron}}</td>
+                                <td>{{row.duration}}</td>
+                                <td>{{row.cutoff}}</td>
+                                <td>{{row.operation_type}}</td>
+                                <td>
+                                    <a ng-click="deletePatchMW(row.server_id, row.window_id, row.id, $index)"><button type="button" class="btn btn-primary btn-xs">Delete</button></a>
+                                    <a ng-click="executionDetails(row.server_id, row.window_id)"><button type="button" class="btn btn-primary btn-xs">History</button></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row justify-content-center my-flex-container">
+                    <div class="p-2 my-flex-item" style='text-align: center;margin-top: 30px;font-size: 24px;' ng-if='patches == ""'>
+                        No missing patch is available.
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row justify-content-start my-flex-container" ng-if='patches != ""'>
+                    <div class="p-2 my-flex-item">
+                        <table class="serverTable table" ng-if="patches.length > 0">
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Classification</th>
+                                <th>Installed Time</th>
+                                <th>KB Id</th>
+                                <th>Severity</th>
+                                <th>State</th>
+                                <th>Title</th>
+                            </tr>
+                            <tr ng-repeat="row in patches">
+                                <td style="width:25px">{{$index + 1}}</td>
+                                <td>{{row.Classification}}</td>
+                                <td>{{row.InstalledTime}}</td>
+                                <td>{{row.KBId}}</td>
+                                <td>{{row.Severity}}</td>
+                                <td>{{row.State}}</td>
+                                <td>{{row.Title}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+        </div>
+        <div ng-switch-when='Users'>		
+		
+			<div class="p-2 my-flex-item" ng-if='rotationkeys.length > 0 && userautorotation.length == 0'>
+			
+				<span ng-repeat="row in rotationkeys">
+					<input type='radio' name="autorotatecheck" value="{{row.id}}" ng-click="autoRotateKeys('select-rotatekey',$event, servers[0].id)" /> {{row.rotatetext}}
+				</span>
+				
+				
+				<div ng-show = "IsRotateVisible">
+					<input type='text' id='autoRotateEmail' value='' placeholder ='Email Addresss' />
+					<button type="button" ng-click="autoRotateKeys('submit-rotatekey',$event, servers[0].id)" class="btn btn-primary btn-sm btnpadding">Submit</button>
+					<button type="button" ng-click="autoRotateKeys('cancel-rotatekey',$event, servers[0].id)" class="btn btn-primary btn-sm btnpadding">Clear</button>
+				</div>
+			
+			</div>			
+			
+			<div class="p-2 my-flex-item" ng-if='userautorotation.length > 0'>				
+				
+				<table class="serverTable table" ng-if="userautorotation.length > 0" style="border-right: 2px solid #ddd">
+                        <tr>
+                            <th style="width:25px">#</th>
+							<th>Days</th>
+                            <th>Due Date</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="row in userautorotation">
+                            <td style="width:25px">{{$index + 1}}</td>
+							<td>								
+								
+								<select ng-model="rotateKeyDay" id="rotateKeyDay">
+								<option value="" selected hidden />
+								<option ng-repeat="key in rotationkeys" value="{{ key.id}}" ng-selected="key.id == row.rotateid"> {{key.rotatetext}}
+                                </option>
+								</select>
+							</td>	
+                            <td>{{row.due_date | date:'MM/dd/yyyy'}}</td>
+                            <td>{{row.emailid}}</td>
+                            <td>
+								
+                                <a ng-click="autoRotateKeys('update-rotatekey',row.rid, servers[0].id)"><button type="button" class="btn btn-info btn-sm">Update</button></a>
+								<a ng-click="autoRotateKeys('delete-rotatekey',row.rid, servers[0].id)"><button type="button" class="btn btn-info btn-sm">Delete</button></a>
+                               
+                            </td>
+                        </tr>
+                    </table>
+				
+			</div>
+
+            <div class="d-flex flex-row justify-content-end my-flex-container">
+                <div class="p-2 my-flex-item">
+                    <a ng-click="refreshUserList(servers[0].id)">
+                        <button type="button" class="btn btn-primary btn-sm btnpadding">Refresh List</button>
+                    </a>
+                </div>
+                <div class="p-2 my-flex-item">
+                    <a ng-click="showUserModal('adduser', servers[0].id)">
+                        <button type="button" class="btn btn-primary btn-sm btnpadding">Add User</button>
+                    </a>
+                </div>                
+            </div>
+
+            <div class="d-flex flex-row justify-content-between my-flex-container">
+                <div class="p-2 my-flex-item" style='text-align: center;margin-top: 30px;font-size: 24px;' ng-if='serverUserList == ""'>
+                    There is no user available for this server.
+                </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-between my-flex-container">
+                <div class="p-2 my-flex-item" ng-if='serverUserList.length > 0'>
+                    <table class="serverTable table" ng-if="serverUserList.length > 0" style="border-right: 2px solid #ddd">
+                        <tr>
+                            <th style="width:25px">#</th>
+                            <th>username</th>
+                            <th>Server IP</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="row in serverUserList">
+                            <td style="width:25px">{{$index + 1}}</td>
+                            <td>{{row.username}}</td>
+                            <td>{{row.server_ip}}</td>
+                            <td>
+								<span ng-if="row.username != 'ec2-user' && row.username != 'ubuntu' && serverUserList.length > 1">
+                                <a ng-click="deleteServerUser(row.username, row.id, servers[0].id, $index)"><button type="button" class="btn btn-info btn-sm">Delete user</button></a>
+								</span>
+								
+                                <a ng-click="showRotateKeyModal(servers[0].id, row.id, row.username, row.email)"><button type="button" class="btn btn-info btn-sm">Rotate key</button></a>
+								
+                                <a ng-click="downloadPrivateKeyModal(servers[0].id, row.id, row.username, row.private_key)" ng-href="{{ fileUrl}}" download="file.pem"><button type="button" class="btn btn-info btn-sm" ng-if="row.private_key != null">Download Key</button></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+         <div ng-switch-when='CloudTrail'>
+            <div class="d-flex flex-row justify-content-between my-flex-container">
+                <div class="p-2 my-flex-item" style='text-align: center;margin-top: 30px;font-size: 24px;' ng-if='cloudTrail == ""'>
+                    {{cloudTrailError}}
+                </div>
+            </div>
+
+
+            <div class="d-flex flex-row justify-content-start my-flex-container">
+                <div class="p-2 col-lg-12 my-flex-item" ng-if='cloudTrail != ""' style="max-height:270px;overflow-y: auto;">
+                    <table class="serverTable table" ng-if="cloudTrail.length > 0">
+                        <tr>
+                            <th style="width:25px">#</th>
+                            <th>Event Id</th>
+                            <th>Event Name</th>
+                            <th>Event Time</th>
+                            <th>Username</th>
+                            <th>Resource Type</th>
+                            <th>Resource Name</th>
+                            <th>Source IP address</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="row in cloudTrail">
+                            <td style="width:25px">{{$index + 1}}</td>
+                            <td>{{row.EventId}}</td>
+                            <td>{{row.EventName}}</td>
+                            <td>{{row.EventTime|date:'yyyy-MM-dd hh:mm'}}</td>
+                            <td>{{row.Username}}</td>
+                            <td>{{row.Resources[0].ResourceType}}</td>
+                            <td>{{row.Resources[0].ResourceName}}</td>
+                            <td>{{row.CloudTrailEvent.sourceIPAddress}}</td>
+                            <td> <button type="button" class="btn btn-info btn-sm" ng-click="showCloudTrailDetails(row)">Details</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .serverTable tr td:first-child{width:150px;padding-bottom:15px;}
+    .serverTable tr td{padding-bottom:15px;}
+    .table{border:2px solid #ddd;border-right:none;font-size: 12px;}
+    table tr th{text-align: left;background:#ddd;}
+    .row > div {display: inline-block;}
+    .table-fixed tbody{
+        height: 230px;
+        overflow-y: auto;
+        width: 100%;
+        display:block;
+        overflow-x: hidden;
+    }
+    .table-fixed thead{
+        display: block;
+    }
+     html {font-size: 80%; }
+</style>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>

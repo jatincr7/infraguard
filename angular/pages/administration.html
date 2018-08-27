@@ -1,0 +1,597 @@
+<style>
+    table tr td {
+        text-align: left;
+    }
+
+    table tr th {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .btn-xs,
+    .btn-xs:hover {
+        background-color: #17a0a2;
+        border-color: #17a0a2;
+    }
+
+    .btnpadding {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-right: 5px;
+    }
+
+    tr:hover td {
+        background: #cfd9e0
+    }
+
+    html {
+        font-size: 70%;
+    }
+</style>
+<!--  <ul  style="width:14.70%; overflow:hidden; float:left;">
+            <div class="leftnav" style="overflow:hidden;">
+                <li ng-show="user" class="h1" style="cursor: pointer;width:200px; height:50px;background:lightgray; border-bottom:1px #e5e5e5 solid; border-right:1px #e5e5e5 solid; overflow:hidden; font-size:16px; color:#303031; text-align:center; line-height:50px; font-weight:600; " ng-click='changeTab(0);'>Users</li>
+                <li ng-show="role" class="h1" style="cursor: pointer;width:200px; height:50px;background:lightgray; border-bottom:1px #e5e5e5 solid; border-right:1px #e5e5e5 solid; overflow:hidden; font-size:16px; color:#303031; text-align:center; line-height:50px; font-weight:600;" ng-click='changeTab(1);'>Roles</li>
+                <li ng-show="policy" class="h1" style="cursor: pointer;width:200px; height:50px;background:lightgray; border-bottom:1px #e5e5e5 solid; border-right:1px #e5e5e5 solid; overflow:hidden; font-size:16px; color:#303031; text-align:center; line-height:50px; font-weight:600;" ng-click='changeTab(2);'>Policies</li>
+                <li ng-show="group" class="h1" style="cursor: pointer;width:200px; height:50px;background:lightgray; border-bottom:1px #e5e5e5 solid; border-right:1px #e5e5e5 solid; overflow:hidden; font-size:16px; color:#303031; text-align:center; line-height:50px; font-weight:600;" ng-click='changeTab(3);'>Groups</li>
+                <li ng-show="customer" class="h1" style="cursor: pointer;width:200px; height:50px;background:lightgray; border-bottom:1px #e5e5e5 solid; border-right:1px #e5e5e5 solid; overflow:hidden; font-size:16px; color:#303031; text-align:center; line-height:50px; font-weight:600;" ng-click='changeTab(4);'>Customers</li>
+                <li ng-show="tag" class="h1" style="cursor: pointer;width:200px; height:50px;background:lightgray; border-bottom:1px #e5e5e5 solid; border-right:1px #e5e5e5 solid; overflow:hidden; font-size:16px; color:#303031; text-align:center; line-height:50px; font-weight:600;" ng-click='changeTab(5);'>Tags</li>
+                <li ng-show="command" class="h1" style="cursor: pointer;width:200px; height:50px;background:lightgray; border-bottom:1px #e5e5e5 solid; border-right:1px #e5e5e5 solid; overflow:hidden; font-size:16px; color:#303031; text-align:center; line-height:50px; font-weight:600;" ng-click='changeTab(6);'>Restricted Commands</li>
+            </div>
+
+        </ul> -->
+
+
+yyyyyy
+
+
+<ul style="float: left; width: 97%; padding-top: 95px;margin-left: 10px">
+    <div class="rightnav">
+        <li style="list-style:none;display: none;">
+
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="form-group" style="color: inherit;">
+                        <span style="vertical-align: sub;">All Users</span>
+                        <div style="float: right; margin-left: 15px; margin-right: 20px;">
+                            <a href="javascript:void(0)" ng-click="showPopup('addUser')" class="btn btn-primary btn-lg btnpadding">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add User</a>
+                        </div>
+                        <div class="input-group" style="float:right;width: 230px">
+                            <div class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <input type="text" class="form-control ng-valid ng-dirty ng-valid-parse ng-touched" placeholder="Search for user name" ng-model="query">
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-body p-0 text-center" style="min-height: 200px;max-height:450px;overflow-y: auto;">
+                    <div style="text-align: center;margin-top: 30px;font-size: 24px;" ng-if="usersdata == ''">
+                        No User Name is available.
+                    </div>
+                    <table class="table mb-0 table-striped" ng-if="usersdata.length > 0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">S.NO.</th>
+                                <th scope="col" class="border-0">Name</th>
+                                <th scope="col" class="border-0">Email</th>
+                                <th scope="col" class="border-0">Role Name</th>
+                                <th scope="col" class="border-0">&nbsp;&nbsp;</th>
+                                <th scope="col" class="border-0">&nbsp;&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in (usersdata| filter:search).slice(begin, end)">
+                                <td scope="col" class="border-0">#{{numPerPage * (currentPage - 1) + $index + 1}}</td>
+                                <td scope="col" class="border-0">{{ user.uname}}</td>
+                                <td scope="col" class="border-0">{{ user.email}}</td>
+                                <td scope="col" class="border-0">{{ user.roleName}}</td>
+                                <td scope="col" class="border-0">
+
+                                    <span ng-if="user.roleName != 'Super Admin'">
+
+                                        <a href="javascript:void(0)" ng-click="showPopup('editUser', user.companyId, numPerPage * (currentPage - 1) + $index)">
+                                            <img width="20px" src="images/edit_icon.png" />
+                                        </a>
+                                        <a href="javascript:void(0)" ng-click="showPopup('deleteUser', user.companyId, numPerPage * (currentPage - 1) + $index)">
+                                            <img width="20px" src="images/delete_icon.png" />
+                                        </a>
+
+                                    </span>
+
+                                </td>
+
+                                <td scope="col" class="border-0 justify-content-around d-flex">
+
+                                    <a href="#/userTrail" ng-click="setUserId(user.id)">
+                                        <button type="button" class="btn btn-info btn-sm">Trail</button>
+                                    </a>
+                                    <a href="javascript:void(0)" ng-click="changePassword(user.id, user.passw)">
+                                        <button type="button" class="btn btn-info btn-sm">Change Password</button>
+                                    </a>
+
+                                </td>
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination" ng-if="usersdata.length > 10" style="margin-right:2.5%">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}">
+                                <a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a>
+                            </li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}">
+                                <a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled: noNext()}">
+                                <a href="javascript:void(0)" ng-click="selectNext()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </li>
+        <li style="list-style:none;display: none;">
+
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="form-group" style="color: inherit;">
+                        <span style="vertical-align: sub;">All Roles</span>
+                        <div style="float:right;margin-right: 20px">
+                            <a href="javascript:void(0)" ng-click="showPopup('createRole')" class="btn btn-primary btn-lg btnpadding">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Role</a>
+                        </div>
+                    </h4>
+                </div>
+
+                <div class="card-body p-0 text-center" style="min-height: 200px;max-height:450px;overflow-y: auto;">
+                    <div style="text-align: center;margin-top: 30px;font-size: 24px;" ng-if="roles == ''">No Role is available.</div>
+                    <table class="table mb-0 table-striped" ng-if="roles.length > 0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">S.NO.</th>
+                                <th scope="col" class="border-0">Role Name</th>
+                                <th scope="col" class="border-0">Role Desc</th>
+                                <th scope="col" class="border-0"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="role in roles.slice(begin, end)">
+                                <td scope="col" class="border-0">#{{numPerPage * (currentPage - 1) + $index + 1}}</td>
+                                <td scope="col" class="border-0">{{ role.roleName}}</td>
+                                <td scope="col" class="border-0">{{ role.roleDesc}}</td>
+                                <td scope="col" class="border-0 justify-content-around d-flex">
+
+                                    <div ng-if="role.roleName != 'Admin' && role.roleName != 'Super Admin' && role.roleName != 'Read Only' && role.roleName != 'ReadWrite Only'">
+
+                                        <a href="javascript:void(0)" ng-click="showPopup('editRole', role.companyId, numPerPage * (currentPage - 1) + $index)">
+                                            <img width="20px" src="images/edit_icon.png" />
+                                        </a>
+                                        <a href="javascript:void(0)" ng-click="showPopup('deleteRole', role.companyId, numPerPage * (currentPage - 1) + $index)">
+                                            <img width="20px" src="images/delete_icon.png" />
+                                        </a>
+
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination" ng-if="roles.length > 10" style="margin-right:2.5%">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}">
+                                <a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a>
+                            </li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}">
+                                <a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled: noNext()}">
+                                <a href="javascript:void(0)" ng-click="selectNext()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li style="list-style:none;display: none;">
+
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="form-group" style="color: inherit;">
+                        <span style="vertical-align: sub;">All Policies</span>
+                        <div style="float:right;margin-right: 20px">
+                            <a href="javascript:void(0)" ng-click="showPopup('createPolicy')" class="btn btn-primary btn-lg btnpadding">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Policy</a>
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-body p-0 text-center" style="min-height: 200px;max-height:450px;overflow-y: auto;">
+                    <div style="text-align: center;margin-top: 30px;font-size: 24px;" ng-if="policiesdata == ''">
+                        No Policy is available.
+                    </div>
+                    <table class="table mb-0 table-striped" ng-if="policiesdata.length > 0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">S.NO.</th>
+                                <th scope="col" class="border-0">Policy Name</th>
+                                <th scope="col" class="border-0">Policy Desc</th>
+                                <th scope="col" class="border-0"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="policy in policiesdata.slice(begin, end)">
+                                <td scope="col" class="border-0">#{{numPerPage * (currentPage - 1) + $index + 1}}</td>
+                                <td scope="col" class="border-0">{{ policy.policyName}}</td>
+                                <td scope="col" class="border-0">{{ policy.policyDesc}}</td>
+                                <td scope="col" class="border-0 justify-content-around d-flex">
+
+                                    <div ng-if="policy.policyName != 'All Permission' && policy.policyName != 'Read Only Policy' && policy.policyName != 'ReadWrite Only Policy'">
+
+                                        <a href="javascript:void(0)" ng-click="showPopup('editPolicy', policy.companyId, numPerPage * (currentPage - 1) + $index)">
+                                            <img width="20px" src="images/edit_icon.png" />
+                                        </a>
+                                        <a href="javascript:void(0)" ng-click="showPopup('deletePolicy',policy.companyId, numPerPage * (currentPage - 1) + $index)">
+                                            <img width="20px" src="images/delete_icon.png" />
+                                        </a>
+
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination" ng-if="policiesdata.length > 10" style="margin-right:2.5%">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}">
+                                <a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a>
+                            </li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}">
+                                <a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled: noNext()}">
+                                <a href="javascript:void(0)" ng-click="selectNext()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </li>
+        <li style="list-style:none;display: none;">
+
+
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="form-group" style="color: inherit;">
+                        <span style="vertical-align: sub;">All Groups</span>
+                        <div style="float:right;margin-right: 20px">
+                            <a href="javascript:void(0)" ng-click="showPopup('createGroup')" class="btn btn-primary btn-lg btnpadding">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Group</a>
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-body p-0 text-center" style="min-height: 200px;max-height:450px;overflow-y: auto;">
+                    <div style="text-align: center;margin-top: 30px;font-size: 24px;" ng-if="groupsdata == ''">
+                        No Group is available.
+                    </div>
+                    <table class="table mb-0 table-striped" ng-if="groupsdata.length > 0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">S.NO.</th>
+                                <th scope="col" class="border-0">Group Name</th>
+                                <th scope="col" class="border-0">Group Desc</th>
+                                <th scope="col" class="border-0"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="group in groupsdata.slice(begin, end)">
+                                <td scope="col" class="border-0">#{{numPerPage * (currentPage - 1) + $index + 1}}</td>
+                                <td scope="col" class="border-0">{{ group.groupName}} {{group.groupNameDef1}}</td>
+                                <td scope="col" class="border-0">{{ group.groupDesc}}</td>
+                                <td scope="col" class="border-0 justify-content-around d-flex">
+                                    <a href="javascript:void(0)" ng-click="showPopup('editGroup', group.companyId, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/edit_icon.png" />
+                                    </a>
+                                    <a href="javascript:void(0)" ng-click="showPopup('deleteGroup', group.companyId, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/delete_icon.png" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination" ng-if="groupsdata.length > 10" style="margin-right:2.5%">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}">
+                                <a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a>
+                            </li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}">
+                                <a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled: noNext()}">
+                                <a href="javascript:void(0)" ng-click="selectNext()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+        </li>
+        <li style="list-style:none;display: none;">
+
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="form-group" style="color: inherit;">
+                        <span style="vertical-align: sub;">All Customers</span>
+                        <div style="float:right;margin-right: 20px">
+                            <a href="javascript:void(0)" ng-click="showPopup('addCustomer')" class="btn btn-primary btn-lg btnpadding">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Customer</a>
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-body p-0 text-center" style="min-height: 200px;max-height:450px;overflow-y: auto;">
+                    <div style="text-align: center;margin-top: 30px;font-size: 24px;" ng-if="customersData == ''">
+                        No Customer is available.
+                    </div>
+                    <table class="table mb-0 table-striped" ng-if="customersData.length > 0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">S.NO.</th>
+                                <th scope="col" class="border-0">Customer Name</th>
+                                <div ng-if="role.roleName != 'Super Admin'">
+                                    <th scope="col" class="border-0">Company</th>
+                                </div>
+                                <th scope="col" class="border-0">Customer ARN</th>
+                                <th scope="col" class="border-0"></th>
+                                <th scope="col" class="border-0">List Instance</th>
+                                <th scope="col" class="border-0"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="customer in customersData.slice(begin, end)">
+                                <td scope="col" class="border-0">#{{numPerPage * (currentPage - 1) + $index + 1}}</td>
+                                <td scope="col" class="border-0">{{ customer.customer_name}}</td>
+                                <div ng-if="role.roleName != 'Super Admin'">
+                                    <td>{{ customer.companyName}}</td>
+                                </div>
+                                <td scope="col" class="border-0">{{ customer.arn}}</td>
+                                <td scope="col" class="border-0 justify-content-around d-flex">
+                                    <a href="javascript:void(0)" ng-click="showPopup('editCustomer', customer.id, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/edit_icon.png" />
+                                    </a>
+                                    <a href="javascript:void(0)" ng-click="showPopup('deleteCustomer', customer.id, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/delete_icon.png" />
+                                    </a>
+                                </td>
+                                <td scope="col" class="border-0 ">
+                                    <a href="#/projectInstances" ng-click="setCustomerId(customer.id)">
+                                        <button type="button" class="btn btn-info btn-sm">List All Instances</button>
+                                    </a>
+                                </td>
+                                <td scope="col" class="border-0" ng-if="roleId == 1">
+                                    <a href="javascript:void(0)" ng-click="assignManager(customer.id)">
+                                        <button type="button" class="btn btn-info btn-sm">Assign to Manager</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination" ng-if="customersData.length > 10" style="margin-right:2.5%">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}">
+                                <a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a>
+                            </li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}">
+                                <a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled: noNext()}">
+                                <a href="javascript:void(0)" ng-click="selectNext()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li style="list-style:none;display: none;">
+
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="form-group" style="color: inherit;">
+                        <span style="vertical-align: sub;">All Tags</span>
+                        <div style="float:right;margin-right: 20px">
+                            <a href="javascript:void(0)" ng-click="showPopup('addTag')" class="btn btn-primary btn-lg btnpadding">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Tag</a>
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-body p-0 text-center" style="min-height: 200px;max-height:450px;overflow-y: auto;">
+                    <div style="text-align: center;margin-top: 30px;font-size: 24px;" ng-if="tagsData == ''">
+                        No Tag is available.
+                    </div>
+                    <table class="table mb-0 table-striped" ng-if="tagsData.length > 0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">S.NO.</th>
+                                <th scope="col" class="border-0">Tag Name</th>
+                                <th scope="col" class="border-0">Tag Desc</th>
+                                <th scope="col" class="border-0"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in tagsData.slice(begin, end)">
+                                <td scope="col" class="border-0">#{{numPerPage * (currentPage - 1) + $index + 1}}</td>
+                                <td scope="col" class="border-0">{{ row.tag_name}}</td>
+                                <td scope="col" class="border-0">{{ row.tag_desc}}</td>
+                                <td scope="col" class="border-0 justify-content-around d-flex">
+                                    <a href="javascript:void(0)" ng-click="editTagModel(row.id, row.tag_name, row.tag_desc, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/edit_icon.png" />
+                                    </a>
+                                    <a href="javascript:void(0)" ng-click="deleteTagModel(row.id, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/delete_icon.png" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination" ng-if="tagsData.length > 10" style="margin-right:2.5%">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}">
+                                <a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a>
+                            </li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}">
+                                <a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled: noNext()}">
+                                <a href="javascript:void(0)" ng-click="selectNext()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li style="list-style:none;display: none;">
+
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h4 class="form-group" style="color: inherit;">
+                        <span style="vertical-align: sub;">All Restricted Commands</span>
+                        <div style="float:right;margin-right: 20px">
+                            <a href="javascript:void(0)" ng-click="showPopup('addCommand')" class="btn btn-primary btn-lg btnpadding">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Restricted Command</a>
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-body p-0 text-center" style="min-height: 200px;max-height:450px;overflow-y: auto;">
+                    <div style="text-align: center;margin-top: 30px;font-size: 24px;" ng-if="commands == ''">
+                        No Command is available.
+                    </div>
+                    <table class="table mb-0 table-striped" ng-if="commands.length > 0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">S.NO.</th>
+                                <th scope="col" class="border-0">Restricted Command Name</th>
+                                <th scope="col" class="border-0">Restricted Command Desc</th>
+                                <th scope="col" class="border-0"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="command in commands.slice(begin, end)">
+                                <td scope="col" class="border-0">#{{numPerPage * (currentPage - 1) + $index + 1}}</td>
+                                <td scope="col" class="border-0">{{ command.commandName}}</td>
+                                <td scope="col" class="border-0">{{ command.commandDesc}}</td>
+                                <td scope="col" class="border-0 justify-content-around d-flex">
+                                    <a href="javascript:void(0)" ng-click="showPopup('editCommand', command.companyId, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/edit_icon.png" />
+                                    </a>
+                                    <a href="javascript:void(0)" ng-click="showPopup('deleteCommand', command.companyId, numPerPage * (currentPage - 1) + $index)">
+                                        <img width="20px" src="images/delete_icon.png" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination" ng-if="commands.length > 10" style="margin-right:2.5%">
+                        <ul>
+                            <li ng-class="{disabled: noPrevious()}">
+                                <a href="javascript:void(0)" ng-click="selectPrevious()">Previous</a>
+                            </li>
+                            <li ng-repeat="page in pages" ng-class="{active: isActive(page)}">
+                                <a href="javascript:void(0)" ng-click="selectPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled: noNext()}">
+                                <a href="javascript:void(0)" ng-click="selectNext()">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li style="list-style:none;display: none;">
+            <div class="container">
+                <table class=" table table-bordered ">
+                    <thead class="thead-dark">
+                        <th>Name</th>
+        
+                        <th>Email</th>
+                        <th>Last Login</th>
+                        <th>Days Since Last Login</th>
+                        </thead>
+                        <tr ng-repeat="user in userLoginStatus|orderBy:'name'" ;>
+                    <td style="font-weight:bold" scope="col" class="border-0">{{user.uname}}</td>
+                    
+                            <td  style="font-weight:bold" scope="col" class="border-0">{{user.email}}</td>
+                            <td style="font-weight:bold" scope="col" class="border-0">{{user.lastlogin*1000|date:"MMM d, y h:mm:ss a"}}</td>
+                            <td style="font-weight:bold" scope="col" class="border-0">{{formatDate(user.lastlogin)+" ago"}}</td>
+                        </tr>  
+                </table>
+            </div>
+            </table>
+
+
+
+
+
+
+
+            <div style="text-align: center;margin-top: 30px;font-size: 24px;">Visualization</div>
+            <button id="manageGraph" class="btn btn-success" onclick="showGraph()" style="font-size: 16px;">See your servers and users</button>
+            <input type="hidden" id="jsonvalue" value={{json}}>
+            <div id="tree-container"></div>
+            <script type="text/javascript">
+
+                function companyVisualReport() {
+
+                    if (document.getElementById("jsonvalue").value != "") {
+
+                        var initialJson = JSON.parse(document.getElementById("jsonvalue").value); DYNAMICTREE.InitJson(initialJson);
+                        D3UTILITY.drawTree();
+
+                        document.getElementById("manageGraph").style.display = "none";
+                    }
+                }
+
+                function showGraph() {
+                    companyVisualReport();
+                }/*
+							$(document).ready(function(){
+	 
+								$('.removeSVG').on('click',function(){
+									//d3.selectAll("svg > *").remove();
+									$("svg").remove();
+								});
+
+								$('.addSVG').on('click',function(){
+
+									if($( "svg" ).length == 0){
+										setTimeout(function(){
+										  companyVisualReport();
+										}, 1000);
+										
+										companyVisualReport();
+									}                                           
+								});
+						   
+							});
+							*/
+
+            </script>
+        </li>
+    </div>
+</ul>

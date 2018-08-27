@@ -1,0 +1,20 @@
+<section class="Profilesection" style="padding-top: 100px; padding-left: 20px;padding-right: 20px">
+            <div class="companyDetailsBg addCompanyDetail">
+                <div class="profileHead"><a href="#/automation" style="float:left;margin-top: -3px;margin-left: 10px"><button type="button" class="btn btn-info btn-sm"><< Back</button></a>&nbsp;&nbsp;{{singleScript.script_name}}</div>
+                <div>
+                    <p style="font-weight: bold;">Script Description : <span style="font-weight: normal;">{{singleScript.script_desc}}</span></p>
+                    <p style="font-weight: bold;">Script to be run : <span style="font-weight: normal;white-space: pre;">{{script}}</span></p>
+                    <p style="font-weight: bold;">Server to run : <span  style="font-weight: normal;" class="server_details"></span> <a href="javascript:void(0)" ng-click="assignServerModel()"><button type="button" class="btn btn-info btn-sm assign_server">Assign Server</button></a></p>
+                    <p style="float:right;margin-right: 5px;"><a href="javascript:void(0)" ng-click="runScriptModel(singleScript.id,singleScript.script_name,script,singleScript.script_desc)" class="btn btn-info btn-sm">Run Script</a></p><br><br>
+                </div>
+                <div style="border:1px solid black;height:280px;margin-top: 10px;">
+                    <p style="font-weight: bold;font-size: 18px;text-align: center">Output Window</p>
+                    <div class="output_window" style="margin-left: 10px;color: black;white-space: pre;overflow: auto;height:200px;font-family: monospace;font-size:14px;"></div>
+                </div>
+                <a ng-click="downloadOutput()" ng-href="{{ fileUrl }}" download="output.txt" style="float: right;margin-top: 10px"><button type="button" class="btn btn-info btn-sm" ng-show="Output">Download Output</button></a>
+            </div> 
+</section>
+<style>
+    table tr td{text-align: center;}table tr th{text-align: center;font-weight: bold;}
+    .btn-xs,.btn-xs:hover{background-color: #17a0a2;border-color: #17a0a2;}
+</style>
