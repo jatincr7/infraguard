@@ -152,6 +152,10 @@ dashBoard.config(function($routeProvider){
         templateUrl : "pages/documentation.html",
         controller : "documentController"
     })
+    .when("/getlogs",{
+     templateUrl:"pages/viewLogs.html",
+     controller:"searchServerController"
+    })
     .otherwise({
         redirectTo : "/"
     });

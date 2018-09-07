@@ -1,11 +1,11 @@
-    <div class="logoHeader">
+<div class="logoHeader">
     <div class="logodiv">
         <a href="#/">
                     <img alt="" src="images/logo.png" />
                     </a>
-    </div>
-    </div>
 
+    </div>
+    </div>
         <!-- Login Section -->
         <section class="loginsection">
             <div class="content-wrapper">
@@ -46,7 +46,12 @@
 
                         <div class="p-2 my-flex-item">
                             <input id="Password1" type="submit" class="btn btn-info" data-toggle="{{visible_mfa ? 'modal' : ''}}" data-target="{{visible_mfa ? '#mfa_authentication' : ''}}" value="Log In" name="btnSubmit" ng-click='login()' style="width: 100%;font-weight: 600;" />
-                        </div>
+
+
+                            
+                                <div class="g-signin2"   ng-click="$log.debug($event)"  data-onsuccess="ongooglesign()"></div>
+                
+
                     </div>
 
                  </form>

@@ -1,0 +1,49 @@
+
+<div class="container">
+<div class="row">
+ <div class="col">
+<form>
+startDate
+<input type="date" id ="startdate" ng-model="startDate">
+EndDate
+<input type="date" id="enddate" ng-model="endDate">
+<select placeholder="select logs type">
+<option value="success">Success Logs</option>
+<option value="error">Error Logs</option>
+</select>
+<button class="btn btn-submit btn-btn-primary">Submit</button>
+</div>
+<p>User Logs Details</p>
+<div ng-if="">
+<p>User Logs Details</p>
+<table class=" table table-bordered ">
+              <thead class="thead-dark">
+                  <th>Name</th>
+  
+                  <th>Email Id</th>
+                  <th>Ip</th>
+                  <th>Date Time</th>
+                  <th>Url</th>
+                  <th>Request</th>
+                  <th>Response</th>
+                  </thead>
+
+                  <tr ng-repeat="user in userLoginStatus|orderBy:'name'" ;>
+              <td style="font-weight:bold" scope="col" class="border-0">{{user.uname}}</td>
+              
+                      <td  style="font-weight:bold" scope="col" class="border-0">{{user.email}}</td>
+                      <td style="font-weight:bold" scope="col" class="border-0">{{user.lastlogin*1000|date:"MMM d, y h:mm:ss a"}}</td>
+                      <td style="font-weight:bold" scope="col" class="border-0">{{formatDate(user.lastlogin)+" ago"}}</td>
+                  </tr>  
+          </table>
+          </div>
+      </div>
+      </table>
+
+
+
+
+</form>
+ </div>             
+</div>
+</div>

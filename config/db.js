@@ -25,7 +25,7 @@ host: "mydbinstance.ct060s8n17pv.us-west-2.rds.amazonaws.com",
 user: "root",
 password: "root1234",
 port: 3306,
-database: "infradb"
+database: "latestrc"
 });
 con.connect(function(err){
 if(err){
