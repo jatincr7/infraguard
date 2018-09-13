@@ -46,11 +46,11 @@
 
                         <div class="p-2 my-flex-item">
                             <input id="Password1" type="submit" class="btn btn-info" data-toggle="{{visible_mfa ? 'modal' : ''}}" data-target="{{visible_mfa ? '#mfa_authentication' : ''}}" value="Log In" name="btnSubmit" ng-click='login()' style="width: 100%;font-weight: 600;" />
-
-
+                            <!-- google start -->
                             
-                                <div class="g-signin2"   ng-click="$log.debug($event)"  data-onsuccess="ongooglesign()"></div>
-                
+                            
+                                  </div>    
+                            <!-- google end -->
 
                     </div>
 
@@ -59,7 +59,18 @@
 
                     <div class="d-flex flex-column my-flex-container-column">
                         <div class="p-2 my-flex-item">
-                            <div class="forgotText" ng-click="showResetPopup('pwd')"><a data-toggle="modal" data-target="#recoverPassModal" href="javascript:void(0)">Forgot Password</a></div>
+
+                                <div class="d-flex flex-row justify-content-between my-flex-container">
+                                        <div class="p-2 my-flex-item">
+                                                <div class="forgotText" ng-click="showResetPopup('pwd')"><a data-toggle="modal" data-target="#recoverPassModal" href="javascript:void(0)">Forgot Password</a></div>
+                                        </div>
+                                        <div class="p-2 my-flex-item">
+                                            <div id="nav">
+                                                <div style="margin-top:-5px;" id="signin" class="g-signin2"></div>  
+                                            </div>
+                                        </div>
+                                </div>
+                            
                         </div>
                         <div class="p-2 my-flex-item">
                             &nbsp;
@@ -93,7 +104,7 @@
             
 
         </section>
-
+        <script src="https://apis.google.com/js/platform.js?onload=appStart" async defer></script>
 <style type="text/css">
     h1, .h1 {
         text-align: center;

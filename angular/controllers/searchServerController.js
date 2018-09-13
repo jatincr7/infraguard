@@ -126,6 +126,10 @@ angular.module("searchServerController", []).controller("searchServerController"
         $rootScope.changeTab = function (id, url) {
             window.location = url;
         };
+        $scope.reload=function(){
+            alert ('reload done')
+            location.reload(true)
+        }
 
         $rootScope.setServerId = function (id, ssm_status) {
             if (ssm_status != "Alive" && ssm_status != "Online") {

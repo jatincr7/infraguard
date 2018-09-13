@@ -42,6 +42,12 @@ a {
 }
 /*a:hover { background-color: #c7d1d6; }*/
 
+.g-signin2{
+         width: 240;
+         height: 50;
+         color: #17a0ad;
+}
+
 
 article, aside, figure, footer, header, hgroup, menu, nav, section {
     display: block;
@@ -350,13 +356,11 @@ a.menuButton:hover {
 }
 
 .loginBox {
-    font-size: 1.4em;
+    font-size: 1em;
     margin: 40px auto 20px;
     background: #fff;
     width: 500px;
-    border-radius: 3px;
     padding: 20px;
-    box-shadow: 2px 2px 2px #ccc;
 }
 
 .introBox {
@@ -372,9 +376,7 @@ a.menuButton:hover {
 
 
 .loginLogo {
-    float: left;
-    color: #333;
-    font-weight: bold;
+    float: center;
 }
 
 .bodySection .logodiv {
@@ -386,6 +388,8 @@ a.menuButton:hover {
     line-height: 30px;
     font-weight: bold;
 }
+
+/*
 
 .loginBox input[type="text"], .loginBox input[type="email"] {
     width: 100%;
@@ -448,6 +452,21 @@ a.menuButton:hover {
         cursor:pointer;
     }
 
+    .loginBox a {
+    color: #df5b37;
+    text-decoration: none;
+    padding: 0;
+}
+
+.loginBox a:hover {
+    color: #df5b37;
+    text-decoration: underline;
+}
+
+*/
+
+
+
 .forgotText {
     float: left;
     font-size: .7em;
@@ -459,11 +478,7 @@ a.menuButton:hover {
     margin: 10px 0 0 0;
 }
 
-.loginBox a {
-    color: #df5b37;
-    text-decoration: none;
-    padding: 0;
-}
+
 
 .loginBox p {
     color: #666;
@@ -474,10 +489,6 @@ a.menuButton:hover {
     margin: 10px 0 0 0;
 }
 
-.loginBox a:hover {
-    color: #df5b37;
-    text-decoration: underline;
-}
 
 .cloudBox {
     font-size: 1.4em;

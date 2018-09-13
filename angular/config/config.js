@@ -20,10 +20,7 @@ function($routeProvider){
 		templateUrl : "/pages/changepassword.html",
 		controller : "changePassCtrl"
 	})
-	.when("/gmail",{
-		templateUrl:"/pages/gmail.html",
-		controller:"loginCtrl"
-	})
+	
 	.otherwise({
 		redirectTo : "/"
 	});
