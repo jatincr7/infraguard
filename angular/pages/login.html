@@ -94,7 +94,7 @@
                     </div>
                     
                     <div>
-                    <p class="colorRed" ng-show="!loginFailed && !loginForm.txtPassw.$valid && (loginForm.txtPassw.$dirty || loginForm.txtPassw.$touched)">Password is required.</p>
+                    <p class="colorRed" ng-show="!isgmail && (!loginFailed && !loginForm.txtPassw.$valid && (loginForm.txtPassw.$dirty || loginForm.txtPassw.$touched))">Password is required.</p>
                     </div>
                    
                     <div class="clear"></div>

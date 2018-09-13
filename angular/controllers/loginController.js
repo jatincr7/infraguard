@@ -37,7 +37,7 @@ angular.module("loginController", []).controller("loginCtrl",
 		
 		//Google sign  in begains//	
 		var auth2;
-
+	
 		$scope.user = {};
 
 		$window.appStart = function () {
@@ -56,14 +56,14 @@ angular.module("loginController", []).controller("loginCtrl",
 				auth2.signIn();
 
 			}
-		};
+		};	
 
 		var signinChanged = function (isSignedIn) {
 			console.log('signinChanged() = ' + isSignedIn);
 			if (isSignedIn) {
-				$rootScope.txtPassw = '';
-				$scope.isgmail = true;
-				$scope.login()
+				
+				//$scope.isgmail = true;
+				//scope.login()
 				//redirecting to the infraguard  after google login//
 			}
 
@@ -112,6 +112,7 @@ angular.module("loginController", []).controller("loginCtrl",
 
 		var userChanged = function (user) {
 			console.log('userChanged()');
+			
 		};
 
 		$scope.signOut = function () {
@@ -145,7 +146,7 @@ angular.module("loginController", []).controller("loginCtrl",
 		//App Login is gmail true when login through google//
 
 
-
+         debugger;
 
 		
 		$scope.login = function () {
@@ -173,8 +174,12 @@ angular.module("loginController", []).controller("loginCtrl",
 				$scope.loginMsg = "";
 				$scope.loginFailed = false;
 			}
+			if(isgmail){
+				var json = { email: email, passw: passw, isgmail: $scope.isgmail };
+			}else{
 			
 			var json = { email: email, passw: passw, isgmail: $scope.isgmail };
+			}
 			$http({
 				url: "/loginAction",
 				data: json,
@@ -182,6 +187,18 @@ angular.module("loginController", []).controller("loginCtrl",
 				headers: { 'Content-Type': 'application/json' },
 			})
 				.success(function (data) {
+					if(isgmail&&data.success==0){
+						$scope.txtEmail='';
+						$scope.textPassw='';
+						$scope.loginFailed=true;
+						$scope.loginMsg=data.error
+						return false;
+					}
+					if(isgmail&&data.success==1){
+						$scope.loginFailed=false
+						$scope.loginMsg=""
+					
+					}
 
 					if (data.success == 1) {
 						$rootScope.userEmail = data.email;
